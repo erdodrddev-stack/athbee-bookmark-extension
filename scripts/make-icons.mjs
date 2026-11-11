@@ -47,7 +47,7 @@ const inRoundRect = (x, y, r = 24) => {
 const inRibbon = (x, y) =>
   x >= 33 && x <= 67 && y >= 22 && y <= 80 - 16 * (1 - Math.abs(x - 50) / 17)
 
-const A = [0x8b, 0x5c, 0xf6], B = [0x5b, 0x3c, 0xc4]
+const BG = [0x19, 0x19, 0x19], RIB = [0xf6, 0xc3, 0x24]
 
 for (const size of [16, 32, 48, 128]) {
   const buf = Buffer.alloc(size * size * 4)
@@ -60,10 +60,8 @@ for (const size of [16, 32, 48, 128]) {
       if (inRoundRect(x, y)) { bg++; if (inRibbon(x, y)) rib++ }
     }
     const n = SS * SS
-    const t = (px + py) / (2 * size)
-    const grad = A.map((a, i) => a + (B[i] - a) * t)
     const ribF = bg ? rib / bg : 0
-    const col = grad.map((g) => Math.round(g + (255 - g) * ribF))
+    const col = BG.map((g, i) => Math.round(g + (RIB[i] - g) * ribF))
     const o = (py * size + px) * 4
     buf[o] = col[0]; buf[o + 1] = col[1]; buf[o + 2] = col[2]
     buf[o + 3] = Math.round((bg / n) * 255)

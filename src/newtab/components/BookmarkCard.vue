@@ -1,9 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { settings, meta } from '../../shared/settings'
 import { faviconUrl, hostOf } from '../../shared/util'
-import { tintFor, extractTint } from '../../shared/tint'
 import { openMenu } from '../ui'
 import { bookmarkMenu, historyMenu } from '../menus'
 import { openFromEvent } from '../actions'
@@ -22,7 +21,6 @@ const props = defineProps({
 
 const host = computed(() => hostOf(props.node.url))
 const icon = computed(() => faviconUrl(props.node.url, 32))
-const tint = ref(tintFor(host.value))
 const pinned = computed(() => !props.history && meta.pinned.includes(props.node.id))
 const hidden = computed(() => !props.history && meta.hidden.includes(props.node.id))
 const dropPos = computed(() => (!props.noDrop && dnd.overId === props.node.id ? dnd.pos : null))
@@ -32,9 +30,6 @@ const tags = computed(() => (props.history ? [] : tagsOf(props.node.id)))
 const shownTags = computed(() => tags.value.slice(0, MAX_TAGS))
 const extraTags = computed(() => tags.value.length - shownTags.value.length)
 
-function onImg(e) {
-  if (!tint.value) tint.value = extractTint(e.target, host.value)
-}
 function onClick(e) {
   openFromEvent(e, props.node.url)
 }
@@ -82,7 +77,6 @@ function onDrop(e) {
     ]"
     :href="node.url"
     :title="(node.title ? node.title + '\n' : '') + node.url + (tags.length ? '\n' + tags.map((x) => '#' + x).join(' ') : '')"
-    :style="tint ? { '--tint': tint } : null"
     draggable="true"
     @click.prevent="onClick"
     @auxclick="onAux"
@@ -94,7 +88,7 @@ function onDrop(e) {
     @drop="onDrop"
   >
     <span class="bm-icon">
-      <img :src="icon" alt="" width="20" height="20" draggable="false" @load="onImg" />
+      <img :src="icon" alt="" width="20" height="20" draggable="false" />
     </span>
     <span class="bm-text">
       <span class="bm-title">{{ node.title || host }}</span>
