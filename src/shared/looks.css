@@ -17,7 +17,7 @@
   .modal, .adv, .ctx, .col, .tag-suggest, .qr-canvas, .pp-qr canvas, .empty, .toast
 ) { border-radius: var(--r-lg); }
 :is([data-look='modern'], [data-look='cyber']) :is(
-  .bm, .search, .input, .tag-input, .btn, .seg, .seg-mini, .sr-crit, .sr-row, .tree-row,
+  .bm, .search, .input, .tag-input, .tc-native, .tc-preview, .btn, .seg, .seg-mini, .sr-crit, .sr-row, .tree-row,
   .st-tabs button, .icon-btn, .sr-ico, .fsec-title, .crumb, .hsec-link, .ctx-item, .sr-edit, .toast-action
 ) { border-radius: var(--r); }
 :is([data-look='modern'], [data-look='cyber']) :is(

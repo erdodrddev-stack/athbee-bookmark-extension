@@ -4,7 +4,7 @@ import Icon from '../../components/Icon.vue'
 import TagPill from '../../components/TagPill.vue'
 import { t } from '../../shared/i18n'
 import { pathTo } from '../../shared/bookmarks'
-import { tagsOf, tagHue } from '../../shared/tags'
+import { tagsOf, tagStyle } from '../../shared/tags'
 import { faviconUrl } from '../../shared/util'
 import { ui, openMenu, filterCount } from '../ui'
 import { bookmarkMenu, folderMenu, historyMenu } from '../menus'
@@ -88,7 +88,7 @@ watch(() => ui.active, () =>
         @auxclick.prevent="(r.kind === 'bookmark' || r.kind === 'history') && runResult(r, $event)"
         @contextmenu.prevent="onMenu($event, r)"
       >
-        <span v-if="r.kind === 'tag'" class="sr-ico tag-ico" :style="{ '--h': tagHue(r.name) }">#</span>
+        <span v-if="r.kind === 'tag'" class="sr-ico tag-ico" :style="tagStyle(r.name)">#</span>
         <span v-else class="sr-ico" :class="r.kind">
           <Icon v-if="r.kind === 'folder'" name="folder" :size="17" />
           <Icon v-else-if="r.kind === 'web'" name="search" :size="17" />

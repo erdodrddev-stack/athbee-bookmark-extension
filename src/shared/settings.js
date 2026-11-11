@@ -40,6 +40,7 @@ const META_DEFAULTS = {
   expanded: {},
   historyOpen: true,
   tags: {}, // bookmarkId -> ['tag', ...]
+  tagColors: {}, // tag -> '#rrggbb' chosen by the user
   tagsOpen: true,
 }
 

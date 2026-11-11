@@ -484,6 +484,19 @@ html.no-anim .bm:hover { transform: none; }
 }
 
 /* ---------- Tags ---------- */
+.tc-preview { display: flex; justify-content: center; padding: 18px; margin-bottom: 18px; border: var(--bw) dashed var(--line); background: var(--bg); }
+.tc-preview .tag { height: 30px; padding: 0 14px; font-size: 14px; max-width: 100%; }
+.tc-pick { display: flex; gap: 10px; }
+.tc-native {
+  flex: none; width: 44px; height: 44px; padding: 3px;
+  border: var(--bw) solid var(--edge); background: var(--card); cursor: pointer;
+}
+.tc-native::-webkit-color-swatch-wrapper { padding: 0; }
+.tc-native::-webkit-color-swatch { border: 0; border-radius: inherit; }
+.tc-hex { font-family: var(--font-mono); text-transform: lowercase; }
+.tc-hex.invalid { border-color: var(--danger); }
+.tc-reset { margin-right: auto; }
+
 .bm-sub { display: flex; align-items: center; gap: 5px; min-width: 0; }
 .bm-sub .bm-url { flex: 0 1 auto; min-width: 24px; }
 .bm-tag { height: 17px; padding: 0 5px; font-size: 10px; max-width: 96px; border-width: 1px; }
@@ -496,11 +509,11 @@ html.no-anim .bm:hover { transform: none; }
 .tag-dot {
   width: 18px; height: 18px;
   border: var(--bw) solid var(--on-accent);
-  background: hsl(var(--h), 85%, 84%);
-  color: var(--on-accent);
+  background: var(--tag-bg, hsl(var(--h), 85%, 84%));
+  color: var(--tag-fg, var(--on-accent));
   font-family: var(--font-mono); font-size: 11px; font-weight: 700;
 }
-html.dark .tag-dot { background: hsl(var(--h), 70%, 78%); }
+html.dark .tag-dot { background: var(--tag-bg, hsl(var(--h), 70%, 78%)); }
 
 .sr-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 8px 12px 0; }
 .sr-filters-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); margin-right: 2px; }
@@ -516,8 +529,8 @@ html.dark .tag-dot { background: hsl(var(--h), 70%, 78%); }
 .sr-edit:hover { background: var(--hover); }
 .sr-tags { flex: none; display: flex; gap: 4px; max-width: 260px; overflow: hidden; }
 .tag-ico {
-  background: hsl(var(--h), 85%, 84%); border-color: var(--on-accent);
-  color: var(--on-accent); font-family: var(--font-mono); font-weight: 700; font-size: 15px;
+  background: var(--tag-bg, hsl(var(--h), 85%, 84%)); border-color: var(--on-accent);
+  color: var(--tag-fg, var(--on-accent)); font-family: var(--font-mono); font-weight: 700; font-size: 15px;
 }
-html.dark .tag-ico { background: hsl(var(--h), 70%, 78%); }
+html.dark .tag-ico { background: var(--tag-bg, hsl(var(--h), 70%, 78%)); }
 

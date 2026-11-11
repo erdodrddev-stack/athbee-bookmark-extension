@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { meta } from '../../shared/settings'
 import { t } from '../../shared/i18n'
-import { allTags, tagHue } from '../../shared/tags'
+import { allTags, tagStyle } from '../../shared/tags'
 import { openMenu } from '../ui'
 import { tagMenu } from '../menus'
 import { applyTag, activeTags } from '../search'
@@ -24,7 +24,7 @@ const toggle = () => (meta.tagsOpen = !meta.tagsOpen)
         :key="tg.name"
         class="tree-row tag-row"
         :class="{ active: activeTags.includes(tg.name) }"
-        :style="{ '--h': tagHue(tg.name) }"
+        :style="tagStyle(tg.name)"
         @click="applyTag(tg.name)"
         @contextmenu.prevent="openMenu($event, tagMenu(tg.name))"
       >

@@ -26,12 +26,17 @@ export const allTags = computed(() => {
 export function renameTag(from, to) {
   to = normTag(to)
   if (!to || to === from) return
+  if (meta.tagColors[from]) {
+    if (!meta.tagColors[to]) meta.tagColors[to] = meta.tagColors[from]
+    delete meta.tagColors[from]
+  }
   for (const [id, list] of Object.entries(meta.tags)) {
     if (list.includes(from)) setTags(id, list.map((tg) => (tg === from ? to : tg)))
   }
 }
 
 export function deleteTag(name) {
+  delete meta.tagColors[name]
   for (const [id, list] of Object.entries(meta.tags)) {
     if (list.includes(name)) setTags(id, list.filter((tg) => tg !== name))
   }
@@ -42,6 +47,35 @@ export function tagHue(name) {
   let h = 0
   for (const ch of name) h = (h * 31 + ch.codePointAt(0)) >>> 0
   return h % 360
+}
+
+/** "#abc" / "aabbcc" -> "#aabbcc", or null when it isn't a hex color. */
+export function normHex(s) {
+  let h = (s || '').trim().replace(/^#/, '').toLowerCase()
+  if (/^[0-9a-f]{3}$/.test(h)) h = h.replace(/./g, (c) => c + c)
+  return /^[0-9a-f]{6}$/.test(h) ? '#' + h : null
+}
+
+/** Dark or light text, whichever reads better on the given background. */
+export function readableOn(hex) {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+  const lin = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+  const lum = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+  return lum > 0.22 ? '#191919' : '#fffff0'
+}
+
+export const tagColor = (name) => meta.tagColors[name] || null
+
+export function setTagColor(name, hex) {
+  const c = normHex(hex)
+  if (c) meta.tagColors[name] = c
+  else delete meta.tagColors[name]
+}
+
+/** Inline style for anything painted with a tag's color (pill, dot, icon). */
+export function tagStyle(name) {
+  const c = tagColor(name)
+  return c ? { '--tag-bg': c, '--tag-fg': readableOn(c) } : { '--h': tagHue(name) }
 }
 
 /** Drop tags of bookmarks that no longer exist (or became folders). */

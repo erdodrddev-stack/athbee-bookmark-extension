@@ -65,6 +65,7 @@ export function tagMenu(name) {
     { label: t('filterByTag'), icon: 'search', action: () => applyTag(name) },
     { divider: true },
     { label: t('rename'), icon: 'pencil', action: () => openDialog('tagRename', { name }) },
+    { label: t('tagColor'), icon: 'palette', action: () => openDialog('tagColor', { name }) },
     { label: t('deleteTag'), icon: 'trash', danger: true, action: () => A.deleteTagEverywhere(name) },
   ]
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { tagHue } from '../shared/tags'
+import { tagStyle } from '../shared/tags'
 
 const props = defineProps({
   name: { type: String, required: true },
@@ -8,7 +8,7 @@ const props = defineProps({
   clickable: Boolean,
 })
 const emit = defineEmits(['remove', 'select'])
-const hue = computed(() => tagHue(props.name))
+const style = computed(() => tagStyle(props.name))
 
 function onClick(e) {
   if (!props.clickable) return
@@ -19,7 +19,7 @@ function onClick(e) {
 </script>
 
 <template>
-  <span class="tag" :class="{ clickable }" :style="{ '--h': hue }" :title="'#' + name" @click="onClick">
+  <span class="tag" :class="{ clickable }" :style="style" :title="'#' + name" @click="onClick">
     <span class="tag-hash">#</span>{{ name }}
     <button
       v-if="removable"
