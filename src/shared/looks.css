@@ -23,7 +23,7 @@
 :is([data-look='modern'], [data-look='cyber']) :is(
   kbd, .search-filter, .search-clear, .tree-chevron, .tag-x, .folder-ico, .input-action, .sr-crit-label
 ) { border-radius: var(--r-sm); }
-:is([data-look='modern'], [data-look='cyber']) :is(.tag, .search-filter-n, .switch, .swatch, .tag-dot),
+:is([data-look='modern'], [data-look='cyber']) :is(.tag, .search-filter-n, .switch, .swatch, .tag-dot, .theme-switch, .ts-knob),
 :is([data-look='modern'], [data-look='cyber']) .switch::after {
   border-radius: 999px;
 }
@@ -175,3 +175,4 @@ html.dark[data-look='cyber'] {
 [data-look='cyber'] .seg button.on, [data-look='cyber'] .seg-mini .icon-btn.on { box-shadow: 0 0 0 1px var(--ink), 0 0 10px var(--glow); }
 [data-look='cyber'] .search-filter-n { background: var(--accent); color: var(--on-accent); box-shadow: 0 0 0 1px var(--ink); }
 [data-look='cyber'] .toast { box-shadow: 0 0 0 2px var(--accent), 0 0 24px var(--glow); }
+[data-look='cyber'] .ts-knob { box-shadow: 0 0 10px var(--glow); }

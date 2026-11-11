@@ -1,4 +1,5 @@
 <script setup>
+import ThemeSwitch from '../../components/ThemeSwitch.vue'
 import { computed, ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { settings } from '../../shared/settings'
@@ -111,6 +112,7 @@ function addMenu(e) {
     </div>
 
     <div class="tb-actions">
+      <ThemeSwitch />
       <button class="icon-btn" :class="{ on: settings.sortBy !== 'default' }" :title="t('sort')" @click="sortMenu">
         <Icon name="sort" :size="18" />
       </button>
