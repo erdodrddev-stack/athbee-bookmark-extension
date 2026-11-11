@@ -61,7 +61,7 @@ watch(() => t('newTab'), (s) => (document.title = s), { immediate: true })
 </script>
 
 <template>
-  <div v-if="ready" class="app" :class="{ 'sidebar-collapsed': settings.sidebarCollapsed }" :style="vars">
+  <div v-if="ready" class="app" :class="{ 'sidebar-collapsed': settings.sidebarCollapsed, 'style-icon': settings.style === 'icon' }" :style="vars">
     <Sidebar />
     <main class="main">
       <TopBar />

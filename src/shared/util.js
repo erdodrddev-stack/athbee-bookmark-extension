@@ -8,6 +8,15 @@ export function faviconUrl(pageUrl, size = 32) {
   return u.toString()
 }
 
+/** A very short label for icon-only tiles: the first segment of the title
+ *  ("Inbox – Gmail" → "Inbox"), or the bare site name ("github.com" → "github"). */
+export function shortLabel(title, url) {
+  const first = (title || '').split(/\s+[-|–—·:•]\s+/)[0].trim()
+  if (first) return first
+  const host = hostOf(url)
+  return host.split('.').length > 1 ? host.split('.').slice(-2)[0] : host
+}
+
 export function hostOf(url) {
   try {
     const u = new URL(url)

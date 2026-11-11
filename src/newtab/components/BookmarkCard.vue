@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { settings, meta } from '../../shared/settings'
-import { faviconUrl, hostOf } from '../../shared/util'
+import { faviconUrl, hostOf, shortLabel } from '../../shared/util'
 import { openMenu } from '../ui'
 import { bookmarkMenu, historyMenu } from '../menus'
 import { openFromEvent } from '../actions'
@@ -24,7 +24,11 @@ const icon = computed(() => faviconUrl(props.node.url, 32))
 const pinned = computed(() => !props.history && meta.pinned.includes(props.node.id))
 const hidden = computed(() => !props.history && meta.hidden.includes(props.node.id))
 const dropPos = computed(() => (!props.noDrop && dnd.overId === props.node.id ? dnd.pos : null))
-const vertical = computed(() => settings.layout === 'columns')
+const isIcon = computed(() => settings.style === 'icon')
+const styleClass = computed(() => ({ compact: 'bm-compact', icon: 'bm-tile' })[settings.style] || 'bm-card')
+const label = computed(() => (isIcon.value ? shortLabel(props.node.title, props.node.url) : props.node.title || host.value))
+// icon tiles flow left-to-right even inside a column
+const vertical = computed(() => settings.layout === 'columns' && !isIcon.value)
 const MAX_TAGS = 2
 const tags = computed(() => (props.history ? [] : tagsOf(props.node.id)))
 const shownTags = computed(() => tags.value.slice(0, MAX_TAGS))
@@ -66,7 +70,7 @@ function onDrop(e) {
   <a
     class="bm"
     :class="[
-      settings.style === 'compact' ? 'bm-compact' : 'bm-card',
+      styleClass,
       {
         'is-pinned': pinned,
         'is-hidden': hidden,
@@ -91,8 +95,8 @@ function onDrop(e) {
       <img :src="icon" alt="" width="20" height="20" draggable="false" />
     </span>
     <span class="bm-text">
-      <span class="bm-title">{{ node.title || host }}</span>
-      <span v-if="settings.style !== 'compact'" class="bm-sub">
+      <span class="bm-title">{{ label }}</span>
+      <span v-if="settings.style === 'card'" class="bm-sub">
         <span class="bm-url">{{ host }}</span>
         <template v-if="tags.length">
           <TagPill v-for="tg in shownTags" :key="tg" :name="tg" clickable class="bm-tag" @select="applyTag" />

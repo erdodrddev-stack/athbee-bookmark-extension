@@ -22,7 +22,7 @@ export const DEFAULTS = {
   theme: 'system', // 'system' | 'light' | 'dark'
   accent: 'yellow', // one of ACCENTS[].id
   look: 'brutal', // one of LOOKS
-  style: 'card', // 'card' | 'compact'
+  style: 'card', // 'card' | 'compact' | 'icon'
   layout: 'grid', // 'grid' | 'columns'
   width: 240,
   fontSize: 14,

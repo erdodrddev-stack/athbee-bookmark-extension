@@ -74,7 +74,7 @@ const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a
           </div>
           <div class="st-row">
             <span class="st-label">{{ t('style') }}</span>
-            <Segmented v-model="settings.style" :options="[{ value: 'card', label: t('card') }, { value: 'compact', label: t('compact') }]" />
+            <Segmented v-model="settings.style" :options="[{ value: 'card', label: t('card') }, { value: 'compact', label: t('compact') }, { value: 'icon', label: t('iconOnly') }]" />
           </div>
           <div class="st-row">
             <span class="st-label">{{ t('layout') }}</span>

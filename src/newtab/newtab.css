@@ -245,6 +245,36 @@ body.resizing { cursor: col-resize; user-select: none; }
 .bm-compact .bm-icon img { width: 18px; height: 18px; }
 .bm-compact .folder-ico { width: 26px; height: 26px; margin: 0 -2px; }
 
+/* icon-only tiles: favicon + very short name */
+.style-icon .bm-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 12px; }
+.bm-tile {
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  height: 78px;
+  padding: 8px 6px;
+}
+.bm-tile .bm-icon { width: 28px; height: 28px; }
+.bm-tile .bm-icon img { width: 26px; height: 26px; }
+.bm-tile .folder-ico { width: 30px; height: 30px; margin: 0; }
+.bm-tile .bm-text { flex: none; width: 100%; align-items: center; }
+.bm-tile .bm-title {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 11px;
+}
+.bm-tile .bm-pin { top: 4px; right: 4px; }
+.bm-tile.drop-before::before { left: -8px; }
+.bm-tile.drop-after::after { right: -8px; }
+.style-icon .col-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 4px; }
+.cols .bm-tile.drop-before::before, .cols .bm-tile.drop-after::after { top: 4px; bottom: 4px; left: auto; right: auto; width: 3px; height: auto; }
+.cols .bm-tile.drop-before::before { left: -3px; }
+.cols .bm-tile.drop-after::after { right: -3px; }
+
 /* drop indicators */
 .bm.drop-before::before, .bm.drop-after::after {
   content: '';

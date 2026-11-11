@@ -32,8 +32,9 @@ function onDrop(e) {
 <template>
   <button
     class="bm bm-folder"
+    :title="settings.style === 'icon' ? node.title || t('untitled') : undefined"
     :class="[
-      settings.style === 'compact' ? 'bm-compact' : 'bm-card',
+      ({ compact: 'bm-compact', icon: 'bm-tile' })[settings.style] || 'bm-card',
       { over, 'is-hidden': hidden, 'is-dragging': dnd.id === node.id },
     ]"
     draggable="true"
@@ -48,7 +49,7 @@ function onDrop(e) {
     <span class="bm-icon folder-ico"><Icon name="folder" :size="16" /></span>
     <span class="bm-text">
       <span class="bm-title">{{ node.title || t('untitled') }}</span>
-      <span v-if="settings.style !== 'compact'" class="bm-url">{{ t('items', { n: count }) }}</span>
+      <span v-if="settings.style === 'card'" class="bm-url">{{ t('items', { n: count }) }}</span>
     </span>
     <Icon v-if="pinned" name="pin" :size="12" class="bm-pin" />
   </button>
