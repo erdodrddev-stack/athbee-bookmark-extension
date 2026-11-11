@@ -2,7 +2,12 @@ import { computed } from 'vue'
 import { settings } from './settings'
 
 const pt = {
-  buyCoffee: 'Me pague um café',
+  accentColor: 'Cor de destaque',
+  accent_yellow: 'Amarelo',
+  accent_orange: 'Laranja',
+  accent_pink: 'Rosa',
+  accent_green: 'Verde',
+  accent_blue: 'Azul',
   tags: 'Tags',
   editTags: 'Editar tags',
   tagsHint: 'Enter ou vírgula para adicionar. Espaços viram “-”.',
@@ -130,7 +135,12 @@ const pt = {
 }
 
 const en = {
-  buyCoffee: 'Buy me a coffee',
+  accentColor: 'Accent color',
+  accent_yellow: 'Yellow',
+  accent_orange: 'Orange',
+  accent_pink: 'Pink',
+  accent_green: 'Green',
+  accent_blue: 'Blue',
   tags: 'Tags',
   editTags: 'Edit tags',
   tagsHint: 'Enter or comma to add. Spaces become “-”.',

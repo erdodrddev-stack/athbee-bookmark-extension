@@ -1,6 +1,14 @@
 import { reactive, watch } from 'vue'
 import { isExt, plain } from './util'
 
+export const ACCENTS = [
+  { id: 'yellow', hex: '#f6c324' },
+  { id: 'orange', hex: '#ff7a45' },
+  { id: 'pink', hex: '#ff8fd1' },
+  { id: 'green', hex: '#8fdc6a' },
+  { id: 'blue', hex: '#74b9ff' },
+]
+
 export const DEFAULTS = {
   lang: 'auto',
   openIn: 'current', // 'current' | 'new'
@@ -10,6 +18,7 @@ export const DEFAULTS = {
   hideEmpty: false,
   showHidden: false,
   theme: 'system', // 'system' | 'light' | 'dark'
+  accent: 'yellow', // one of ACCENTS[].id
   style: 'card', // 'card' | 'compact'
   layout: 'grid', // 'grid' | 'columns'
   width: 240,
@@ -106,7 +115,9 @@ export function applyTheme() {
     root.classList.toggle('dark', dark)
     root.classList.toggle('light', !dark)
     root.classList.toggle('no-anim', settings.disableAnimations)
+    const accent = ACCENTS.find((a) => a.id === settings.accent) ?? ACCENTS[0]
+    root.style.setProperty('--accent', accent.hex)
   }
-  watch(() => [settings.theme, settings.disableAnimations], update, { immediate: true })
+  watch(() => [settings.theme, settings.accent, settings.disableAnimations], update, { immediate: true })
   mq.addEventListener('change', update)
 }

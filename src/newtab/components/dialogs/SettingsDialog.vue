@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Modal from '../../../components/Modal.vue'
 import Icon from '../../../components/Icon.vue'
 import Logo from '../../../components/Logo.vue'
 import Toggle from '../../../components/Toggle.vue'
 import Segmented from '../../../components/Segmented.vue'
-import { settings } from '../../../shared/settings'
+import Swatches from '../../../components/Swatches.vue'
+import { settings, ACCENTS } from '../../../shared/settings'
 import { t } from '../../../shared/i18n'
 import { isExt } from '../../../shared/util'
 
@@ -14,6 +15,7 @@ const tab = ref('general')
 const version = isExt ? chrome.runtime.getManifest().version : 'dev'
 const isMac = navigator.platform.toLowerCase().includes('mac')
 const mod = isMac ? '⌘' : 'Ctrl'
+const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a.hex, label: t('accent_' + a.id) })))
 </script>
 
 <template>
@@ -60,6 +62,10 @@ const mod = isMac ? '⌘' : 'Ctrl'
                 { value: 'dark', label: t('dark'), icon: 'moon' },
               ]"
             />
+          </div>
+          <div class="st-row">
+            <span class="st-label">{{ t('accentColor') }}</span>
+            <Swatches v-model="settings.accent" :options="accentOptions" />
           </div>
           <div class="st-row">
             <span class="st-label">{{ t('style') }}</span>

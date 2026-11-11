@@ -20,7 +20,7 @@ Se outra extensão também substituir a nova guia (ex.: Markoob), desative-a enq
 
 - `src/newtab/`: página da nova guia (barra lateral, pastas, busca, menus, diálogos)
 - `src/popup/`: popup do ícone da barra (QR code, salvar/editar a página atual)
-- `src/shared/`: favoritos, histórico, configurações, i18n (pt/en), cor dos favicons
+- `src/shared/`: favoritos, histórico, configurações, i18n (pt/en)
 - `scripts/make-icons.mjs`: gera os PNGs de `public/icons/`
 
 Configurações, itens fixados e ocultos ficam em `chrome.storage.local`. Nenhum dado sai do navegador.

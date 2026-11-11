@@ -39,11 +39,7 @@ function png(size, rgba) {
 }
 
 // Shape in a 100x100 space
-const inRoundRect = (x, y, r = 24) => {
-  if (x < 0 || y < 0 || x > 100 || y > 100) return false
-  const cx = Math.min(Math.max(x, r), 100 - r), cy = Math.min(Math.max(y, r), 100 - r)
-  return (x - cx) ** 2 + (y - cy) ** 2 <= r * r
-}
+const inSquare = (x, y) => x >= 0 && y >= 0 && x <= 100 && y <= 100
 const inRibbon = (x, y) =>
   x >= 33 && x <= 67 && y >= 22 && y <= 80 - 16 * (1 - Math.abs(x - 50) / 17)
 
@@ -57,7 +53,7 @@ for (const size of [16, 32, 48, 128]) {
     for (let sy = 0; sy < SS; sy++) for (let sx = 0; sx < SS; sx++) {
       const x = ((px + (sx + 0.5) / SS) / size) * 100
       const y = ((py + (sy + 0.5) / SS) / size) * 100
-      if (inRoundRect(x, y)) { bg++; if (inRibbon(x, y)) rib++ }
+      if (inSquare(x, y)) { bg++; if (inRibbon(x, y)) rib++ }
     }
     const n = SS * SS
     const ribF = bg ? rib / bg : 0
