@@ -35,6 +35,7 @@ export function folderMenu(n) {
   items.push(
     { label: t('addBookmark'), icon: 'bookmark-plus', action: () => openDialog('bookmark', { parentId: n.id }) },
     { label: t('addFolder'), icon: 'folder-plus', action: () => openDialog('folder', { parentId: n.id }) },
+    { label: t('linkCheckFolder'), icon: 'link-off', action: () => openDialog('linkCheck', { scopeId: n.id }) },
   )
   if (!isRoot) {
     items.push(

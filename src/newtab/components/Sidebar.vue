@@ -8,6 +8,7 @@ import { settings, meta } from '../../shared/settings'
 import { t } from '../../shared/i18n'
 import { topFolders, getNode, byId } from '../../shared/bookmarks'
 import { ui, go, openDialog, isSearching } from '../ui'
+import { check } from '../linkcheck'
 import { isVisible } from '../sort'
 
 const roots = computed(() => {
@@ -67,6 +68,13 @@ function startResize(e) {
     </nav>
 
     <div class="sb-foot">
+      <button class="tree-row" @click="openDialog('linkCheck')">
+        <span class="tree-chevron is-leaf" />
+        <span class="tree-ico"><Icon name="link-off" :size="17" /></span>
+        <span class="tree-title">{{ t('linkCheck') }}</span>
+        <span v-if="check.running" class="tree-count">{{ check.done }}/{{ check.total }}</span>
+        <span v-else-if="check.finishedAt && check.results.length" class="tree-count">{{ check.results.length }}</span>
+      </button>
       <button class="tree-row" @click="openDialog('settings')">
         <span class="tree-chevron is-leaf" />
         <span class="tree-ico"><Icon name="settings" :size="17" /></span>
