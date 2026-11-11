@@ -3,6 +3,8 @@ import { reactive } from 'vue'
 export const ui = reactive({
   current: 'home', // 'home' or a folder id
   query: '',
+  tagFilter: { all: [], any: [], none: [], only: [] }, // advanced tag search
+  advOpen: false, // advanced search panel
   active: 0, // highlighted search result
   menu: null, // { x, y, items }
   dialog: null, // { type, props }
@@ -10,9 +12,27 @@ export const ui = reactive({
   focusSearch: 0,
 })
 
+const emptyFilter = () => ({ all: [], any: [], none: [], only: [] })
+
+/** Number of tags set in the advanced search. */
+export const filterCount = () => Object.values(ui.tagFilter).reduce((n, list) => n + list.length, 0)
+
+/** True while showing search results (typed query or advanced tag filters). */
+export const isSearching = () => !!ui.query.trim() || filterCount() > 0
+
+export function clearFilter() {
+  ui.tagFilter = emptyFilter()
+}
+
+export function clearSearch() {
+  ui.query = ''
+  clearFilter()
+  ui.advOpen = false
+}
+
 export function go(id) {
   ui.current = id
-  ui.query = ''
+  clearSearch()
 }
 
 /** Open a context menu at a mouse event, or under an element (pass the element). */

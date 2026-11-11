@@ -98,7 +98,8 @@ body.resizing { cursor: col-resize; user-select: none; }
 .crumb-sep { flex: none; color: var(--text-3); }
 
 .search {
-  flex: 0 1 440px;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 9px;
@@ -115,6 +116,51 @@ body.resizing { cursor: col-resize; user-select: none; }
 .search input::placeholder { color: var(--text-3); }
 .search-clear { display: grid; place-items: center; width: 24px; height: 24px; }
 .search-clear:hover { background: var(--hover); color: var(--text); }
+.search-wrap { position: relative; flex: 0 1 440px; display: flex; min-width: 0; }
+.search-wrap .search { flex: 1; }
+.search-filter {
+  position: relative; display: grid; place-items: center; flex: none;
+  width: 28px; height: 28px; margin-right: -4px;
+  border: var(--bw) solid transparent; color: var(--text-2);
+}
+.search-filter:hover { background: var(--hover); color: var(--text); }
+.search-filter.open { border-color: var(--ink); color: var(--text); }
+.search-filter.on { background: var(--accent); border-color: var(--ink); color: var(--on-accent); }
+.search-filter-n {
+  position: absolute; top: -7px; right: -7px;
+  min-width: 16px; height: 16px; padding: 0 3px;
+  display: grid; place-items: center;
+  background: var(--ink); color: var(--bg);
+  font: 700 10px/1 var(--font-mono);
+}
+
+/* ---------- Advanced search panel ---------- */
+.adv {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 50;
+  width: min(460px, calc(100vw - 32px));
+  border: var(--bw) solid var(--line);
+  background: var(--card);
+  box-shadow: var(--shadow-lg);
+  animation: pop-in 0.12s ease-out;
+}
+.adv-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 6px 6px 16px;
+  border-bottom: var(--bw) solid var(--line);
+  background: var(--accent); color: var(--on-accent);
+}
+.adv-head .icon-btn { width: 30px; height: 30px; color: var(--on-accent); }
+.adv-head .icon-btn:hover { background: var(--on-accent-hover); }
+.adv-title { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 15px; text-transform: uppercase; }
+.adv-body { padding: 16px 16px 0; }
+.adv-body .field { margin-bottom: 14px; }
+.adv-foot {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px 16px;
+  border-top: var(--bw) solid var(--rule);
+}
+.adv-count { flex: 1; min-width: 0; font-family: var(--font-mono); font-size: 11px; color: var(--text-2); }
+.adv-foot .btn { height: 34px; padding: 0 12px; font-size: 12px; }
 
 .tb-actions { display: flex; align-items: center; gap: 6px; flex: none; }
 .seg-mini { display: flex; border: var(--bw) solid var(--ink); background: var(--card); }
@@ -431,7 +477,7 @@ html.no-anim .bm:hover { transform: none; }
 
 @media (max-width: 760px) {
   .topbar { flex-wrap: wrap; padding: 12px 16px; }
-  .search { order: 3; flex-basis: 100%; }
+  .search-wrap { order: 3; flex-basis: 100%; }
   .content { padding: 8px 16px 48px; }
   .settings { flex-direction: column; }
   .st-tabs { flex-direction: row; flex-wrap: wrap; width: auto; border: 0; padding: 0; }
@@ -459,6 +505,15 @@ html.dark .tag-dot { background: hsl(var(--h), 70%, 78%); }
 .sr-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 8px 12px 0; }
 .sr-filters-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); margin-right: 2px; }
 .sr-filters .tag { height: 26px; padding: 0 10px; font-size: 12px; max-width: 240px; }
+.sr-crit { display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 0; border: var(--bw) solid var(--line); }
+.sr-crit-label {
+  align-self: stretch; display: grid; place-items: center; padding: 0 8px; margin-right: 2px;
+  border-right: var(--bw) solid var(--line); background: var(--hover);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.sr-crit .tag { height: 22px; padding: 0 7px; font-size: 11px; }
+.sr-edit { padding: 4px 8px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; text-decoration: underline; text-underline-offset: 3px; }
+.sr-edit:hover { background: var(--hover); }
 .sr-tags { flex: none; display: flex; gap: 4px; max-width: 260px; overflow: hidden; }
 .tag-ico {
   background: hsl(var(--h), 85%, 84%); border-color: var(--on-accent);

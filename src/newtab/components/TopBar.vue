@@ -1,14 +1,23 @@
 <script setup>
-import { computed, ref, watch, nextTick } from 'vue'
+import { computed, ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { settings } from '../../shared/settings'
 import { t } from '../../shared/i18n'
 import { pathTo, byId, defaultFolderId } from '../../shared/bookmarks'
-import { ui, go, openMenu, openDialog } from '../ui'
+import { ui, go, openMenu, openDialog, isSearching, clearSearch, filterCount } from '../ui'
 import { folderMenu } from '../menus'
 import { results, runResult } from '../search'
+import AdvancedSearch from './AdvancedSearch.vue'
 
 const input = ref(null)
+const wrap = ref(null)
+
+// Close the advanced panel when clicking anywhere outside the search area
+function onDocDown(e) {
+  if (ui.advOpen && wrap.value && !wrap.value.contains(e.target)) ui.advOpen = false
+}
+onMounted(() => document.addEventListener('mousedown', onDocDown))
+onBeforeUnmount(() => document.removeEventListener('mousedown', onDocDown))
 
 const path = computed(() => {
   void byId.value
@@ -16,14 +25,14 @@ const path = computed(() => {
 })
 
 watch(() => ui.focusSearch, () => nextTick(() => input.value?.focus()))
-watch(() => ui.query, () => (ui.active = 0))
+watch(() => [ui.query, ui.tagFilter], () => (ui.active = 0), { deep: true })
 
 function onKey(e) {
   const n = results.value.length
   if (e.key === 'ArrowDown') { e.preventDefault(); ui.active = Math.min(n - 1, ui.active + 1) }
   else if (e.key === 'ArrowUp') { e.preventDefault(); ui.active = Math.max(0, ui.active - 1) }
   else if (e.key === 'Enter') { e.preventDefault(); runResult(results.value[ui.active], e) }
-  else if (e.key === 'Escape') { ui.query = ''; input.value?.blur() }
+  else if (e.key === 'Escape') { if (ui.advOpen) ui.advOpen = false; else { clearSearch(); input.value?.blur() } }
 }
 
 function sortMenu(e) {
@@ -57,7 +66,7 @@ function addMenu(e) {
     </button>
 
     <nav class="crumbs">
-      <span v-if="ui.query.trim()" class="crumb last">{{ t('searchResults') }}</span>
+      <span v-if="isSearching()" class="crumb last">{{ t('searchResults') }}</span>
       <template v-else>
         <button class="crumb" :class="{ last: !path.length }" @click="go('home')">{{ t('home') }}</button>
         <template v-for="(n, i) in path" :key="n.id">
@@ -72,6 +81,7 @@ function addMenu(e) {
       </template>
     </nav>
 
+    <div ref="wrap" class="search-wrap">
     <label class="search">
       <Icon name="search" :size="17" />
       <input
@@ -82,11 +92,23 @@ function addMenu(e) {
         autocomplete="off"
         @keydown="onKey"
       />
-      <button v-if="ui.query" class="search-clear" :title="t('close')" @click.prevent="ui.query = ''">
+      <button v-if="isSearching()" class="search-clear" :title="t('clearSearch')" @click.prevent="clearSearch">
         <Icon name="x" :size="15" />
       </button>
       <kbd v-else>/</kbd>
+      <button
+        class="search-filter"
+        :class="{ on: filterCount() > 0, open: ui.advOpen }"
+        :title="t('advancedSearch')"
+        :aria-expanded="ui.advOpen"
+        @click.prevent="ui.advOpen = !ui.advOpen"
+      >
+        <Icon name="filter" :size="15" />
+        <span v-if="filterCount()" class="search-filter-n">{{ filterCount() }}</span>
+      </button>
     </label>
+    <AdvancedSearch v-if="ui.advOpen" />
+    </div>
 
     <div class="tb-actions">
       <button class="icon-btn" :class="{ on: settings.sortBy !== 'default' }" :title="t('sort')" @click="sortMenu">

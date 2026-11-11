@@ -5,7 +5,7 @@ import { reloadTree, watchBookmarkEvents, getNode, byId } from '../shared/bookma
 import { loadHistory } from '../shared/history'
 import { pruneTags } from '../shared/tags'
 import { t } from '../shared/i18n'
-import { ui, go } from './ui'
+import { ui, go, isSearching } from './ui'
 import Sidebar from './components/Sidebar.vue'
 import TopBar from './components/TopBar.vue'
 import HomeView from './components/HomeView.vue'
@@ -66,7 +66,7 @@ watch(() => t('newTab'), (s) => (document.title = s), { immediate: true })
     <main class="main">
       <TopBar />
       <div ref="content" class="content custom-scroll">
-        <SearchResults v-if="ui.query.trim()" />
+        <SearchResults v-if="isSearching()" />
         <HomeView v-else-if="ui.current === 'home'" />
         <FolderView v-else :key="ui.current" :folder-id="ui.current" />
       </div>

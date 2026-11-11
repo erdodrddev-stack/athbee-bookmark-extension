@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { meta } from '../../shared/settings'
 import { t } from '../../shared/i18n'
-import { ui, go, openMenu } from '../ui'
+import { ui, go, openMenu, isSearching } from '../ui'
 import { folderMenu } from '../menus'
 import { isVisible, showFolder } from '../sort'
 import { canDrop, dropInto } from '../dnd'
@@ -19,7 +19,7 @@ const subfolders = computed(() =>
 )
 const count = computed(() => (props.node.children || []).filter((n) => n.url && isVisible(n)).length)
 const expanded = computed(() => !!meta.expanded[props.node.id])
-const active = computed(() => ui.current === props.node.id && !ui.query)
+const active = computed(() => ui.current === props.node.id && !isSearching())
 const hidden = computed(() => meta.hidden.includes(props.node.id))
 const over = ref(false)
 

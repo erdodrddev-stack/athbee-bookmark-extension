@@ -7,7 +7,7 @@ import SidebarTags from './SidebarTags.vue'
 import { settings, meta } from '../../shared/settings'
 import { t } from '../../shared/i18n'
 import { topFolders, getNode, byId } from '../../shared/bookmarks'
-import { ui, go, openDialog } from '../ui'
+import { ui, go, openDialog, isSearching } from '../ui'
 import { isVisible } from '../sort'
 
 const roots = computed(() => {
@@ -49,7 +49,7 @@ function startResize(e) {
     </div>
 
     <nav class="sb-nav custom-scroll">
-      <button class="tree-row" :class="{ active: ui.current === 'home' && !ui.query }" @click="go('home')">
+      <button class="tree-row" :class="{ active: ui.current === 'home' && !isSearching() }" @click="go('home')">
         <span class="tree-chevron is-leaf" />
         <span class="tree-ico"><Icon name="home" :size="17" /></span>
         <span class="tree-title">{{ t('home') }}</span>

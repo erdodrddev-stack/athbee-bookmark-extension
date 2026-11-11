@@ -4,7 +4,7 @@ import { byId, allBookmarks, pathTo } from '../shared/bookmarks'
 import { historyItems, visitsFor } from '../shared/history'
 import { allTags, normTag, tagsOf } from '../shared/tags'
 import { fold, normUrl } from '../shared/util'
-import { ui, go } from './ui'
+import { ui, go, isSearching } from './ui'
 import { isVisible } from './sort'
 import { openFromEvent } from './actions'
 
@@ -44,12 +44,40 @@ function hasTags(id, tags, partial) {
   return !partial || mine.some((tg) => tg.startsWith(partial))
 }
 
+/** Advanced search: all / any / none / only (exactly these tags). */
+function passesFilter(mine) {
+  const { all, any, none, only } = ui.tagFilter
+  if (!all.every((tg) => mine.includes(tg))) return false
+  if (any.length && !any.some((tg) => mine.includes(tg))) return false
+  if (none.some((tg) => mine.includes(tg))) return false
+  if (only.length && (mine.length !== only.length || !only.every((tg) => mine.includes(tg)))) return false
+  return true
+}
+
+/** Bookmark matches the typed query and the advanced filters. */
+function bookmarkMatches(b) {
+  const { tags, text, partial } = parsed.value
+  if ((tags.length || partial !== null) && !hasTags(b.id, tags, partial)) return false
+  const mine = tagsOf(b.id)
+  if (!passesFilter(mine)) return false
+  if (text.length && !text.every((tk) => (fold(b.title) + ' ' + fold(b.url) + ' ' + mine.join(' ')).includes(tk))) return false
+  return visibleWithAncestors(b)
+}
+
+/** How many bookmarks match right now (not capped like the result list). */
+export const matchCount = computed(() => {
+  void byId.value
+  void meta.tags
+  if (!isSearching()) return 0
+  return allBookmarks().filter(bookmarkMatches).length
+})
+
 export const results = computed(() => {
-  if (!ui.query.trim()) return []
+  if (!isSearching()) return []
   void byId.value
   void meta.tags
   const { tags, text, partial } = parsed.value
-  const tagMode = tags.length > 0 || partial !== null
+  const tagMode = tags.length > 0 || partial !== null || Object.values(ui.tagFilter).some((l) => l.length)
   const first = text[0] || ''
   const matches = (s) => text.every((tk) => s.includes(tk))
 
@@ -77,11 +105,9 @@ export const results = computed(() => {
   const bookmarked = new Set()
   for (const b of allBookmarks()) {
     bookmarked.add(normUrl(b.url))
-    if (tagMode && !hasTags(b.id, tags, partial)) continue
+    if (!bookmarkMatches(b)) continue
     const ft = fold(b.title)
     const myTags = tagsOf(b.id)
-    if (text.length && !matches(ft + ' ' + fold(b.url) + ' ' + myTags.join(' '))) continue
-    if (!visibleWithAncestors(b)) continue
     const rank = !first ? 0 : ft.startsWith(first) ? 0 : ft.includes(first) ? 1 : myTags.some((tg) => tg.startsWith(first)) ? 1 : 2
     bms.push({ kind: 'bookmark', node: b, rank, visits: visitsFor(b.url) })
   }

@@ -6,11 +6,26 @@ import { t } from '../../shared/i18n'
 import { pathTo } from '../../shared/bookmarks'
 import { tagsOf, tagHue } from '../../shared/tags'
 import { faviconUrl } from '../../shared/util'
-import { ui, openMenu } from '../ui'
+import { ui, openMenu, filterCount } from '../ui'
 import { bookmarkMenu, folderMenu, historyMenu } from '../menus'
 import { results, runResult, activeTags, parsed, applyTag, removeTag } from '../search'
 
 const el = ref(null)
+
+// Chips summarizing every active tag criterion; typed #tags count as "all"
+const criteria = computed(() => {
+  const f = ui.tagFilter
+  const del = (key) => (name) => (f[key] = f[key].filter((x) => x !== name))
+  const pills = (key) => f[key].map((name) => ({ name, remove: del(key) }))
+  const typed = activeTags.value.filter((name) => !f.all.includes(name)).map((name) => ({ name, remove: removeTag }))
+  return [
+    { key: 'all', label: t('chipAll'), tags: [...typed, ...pills('all')] },
+    { key: 'any', label: t('chipAny'), tags: pills('any') },
+    { key: 'none', label: t('chipNone'), tags: pills('none') },
+    { key: 'only', label: t('chipOnly'), tags: pills('only') },
+  ].filter((c) => c.tags.length)
+})
+const filtering = computed(() => criteria.value.length > 0)
 
 const groups = computed(() => {
   const g = { tag: [], folder: [], bookmark: [], history: [], web: [] }
@@ -47,13 +62,17 @@ watch(() => ui.active, () =>
 
 <template>
   <div ref="el" class="sr">
-    <div v-if="activeTags.length" class="sr-filters">
+    <div v-if="filtering" class="sr-filters">
       <span class="sr-filters-label">{{ t('filteringBy') }}</span>
-      <TagPill v-for="tg in activeTags" :key="tg" :name="tg" removable @remove="removeTag" />
+      <span v-for="c in criteria" :key="c.key" class="sr-crit">
+        <span class="sr-crit-label">{{ c.label }}</span>
+        <TagPill v-for="tg in c.tags" :key="tg.name" :name="tg.name" removable @remove="tg.remove" />
+      </span>
+      <button v-if="filterCount()" type="button" class="sr-edit" @click="ui.advOpen = true">{{ t('editFilters') }}</button>
     </div>
 
     <div v-if="noBookmarks && !(typingTagOnly && groups.length)" class="sr-empty">
-      {{ activeTags.length ? t('noTagged') : t('noResults') }}
+      {{ filtering ? t('noTagged') : t('noResults') }}
     </div>
 
     <template v-for="g in groups" :key="g.key">
