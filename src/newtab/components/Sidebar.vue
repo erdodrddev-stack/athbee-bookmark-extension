@@ -9,6 +9,7 @@ import { t } from '../../shared/i18n'
 import { topFolders, getNode, byId } from '../../shared/bookmarks'
 import { ui, go, openDialog } from '../ui'
 import { isVisible } from '../sort'
+import { DONATE_URL } from '../../shared/config'
 
 const roots = computed(() => {
   void byId.value
@@ -72,6 +73,10 @@ function startResize(e) {
         <span class="tree-ico"><Icon name="settings" :size="17" /></span>
         <span class="tree-title">{{ t('settings') }}</span>
       </button>
+      <a v-if="DONATE_URL" class="donate-btn" :href="DONATE_URL" target="_blank" rel="noopener noreferrer">
+        <Icon name="coffee" :size="17" />
+        <span>{{ t('buyCoffee') }}</span>
+      </a>
     </div>
 
     <div class="sb-resize" @pointerdown="startResize" />

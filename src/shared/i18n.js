@@ -2,6 +2,7 @@ import { computed } from 'vue'
 import { settings } from './settings'
 
 const pt = {
+  buyCoffee: 'Me pague um café',
   tags: 'Tags',
   editTags: 'Editar tags',
   tagsHint: 'Enter ou vírgula para adicionar. Espaços viram “-”.',
@@ -129,6 +130,7 @@ const pt = {
 }
 
 const en = {
+  buyCoffee: 'Buy me a coffee',
   tags: 'Tags',
   editTags: 'Edit tags',
   tagsHint: 'Enter or comma to add. Spaces become “-”.',
