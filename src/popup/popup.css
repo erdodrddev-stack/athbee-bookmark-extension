@@ -1,0 +1,25 @@
+html, body { width: 320px; }
+
+.pp { padding: 14px 18px 18px; }
+
+.pp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.pp-brand {
+  display: flex; align-items: center; gap: 9px;
+  margin-left: -6px; padding: 5px 8px 5px 6px; border-radius: 9px;
+  font-size: 16px; font-weight: 600;
+}
+.pp-brand:hover { background: var(--hover); }
+.pp-chev { color: var(--text-3); transition: transform 0.15s; }
+.pp-brand:hover .pp-chev { transform: translateX(2px); }
+
+.pp-qr { display: grid; place-items: center; min-height: 40px; margin: 6px 0 18px; }
+.pp-qr canvas { width: 168px; height: 168px; padding: 10px; border-radius: 14px; background: #fff; box-sizing: content-box; }
+html.dark .pp-qr canvas { border: 1px solid var(--border); }
+
+.pp-form .field { margin-bottom: 14px; }
+.pp-submit { width: 100%; height: 46px; margin-top: 10px; border-radius: 11px; font-size: 14.5px; letter-spacing: 0.04em; text-transform: uppercase; }
+.pp-remove { width: 100%; margin-top: 6px; color: var(--danger); font-size: 13px; }
+.pp-remove:hover { background: var(--danger-soft); color: var(--danger); }
+
+/* suggestions in the flow so the popup grows instead of clipping them */
+.pp .tag-suggest { position: static; margin-top: 4px; width: 100%; flex-basis: 100%; box-shadow: none; }
