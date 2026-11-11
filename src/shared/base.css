@@ -1,8 +1,8 @@
 :root {
   /* surfaces */
-  --bg: #fffff0;
-  --card: #ffffff;
-  --hover: #f4f3dc;
+  --bg: #f3f2e4;
+  --card: #fffff0;
+  --hover: #e9e8d6;
   --overlay: rgba(25, 25, 25, 0.55);
   --dot: rgba(25, 25, 25, 0.12);
   /* lines: --ink for controls and selected states, --line for surfaces, --rule for row dividers */
