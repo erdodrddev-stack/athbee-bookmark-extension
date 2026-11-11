@@ -6,6 +6,7 @@ import '@fontsource/archivo-black/400.css'
 import '@fontsource/space-mono/400.css'
 import '@fontsource/space-mono/700.css'
 import '../shared/base.css'
+import '../shared/looks.css'
 import './popup.css'
 import Popup from './Popup.vue'
 

@@ -6,7 +6,7 @@ import Logo from '../../../components/Logo.vue'
 import Toggle from '../../../components/Toggle.vue'
 import Segmented from '../../../components/Segmented.vue'
 import Swatches from '../../../components/Swatches.vue'
-import { settings, ACCENTS } from '../../../shared/settings'
+import { settings, ACCENTS, LOOKS } from '../../../shared/settings'
 import { t } from '../../../shared/i18n'
 import { isExt } from '../../../shared/util'
 
@@ -15,6 +15,7 @@ const tab = ref('general')
 const version = isExt ? chrome.runtime.getManifest().version : 'dev'
 const isMac = navigator.platform.toLowerCase().includes('mac')
 const mod = isMac ? '⌘' : 'Ctrl'
+const lookOptions = computed(() => LOOKS.map((l) => ({ value: l, label: t('look_' + l) })))
 const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a.hex, label: t('accent_' + a.id) })))
 </script>
 
@@ -62,6 +63,10 @@ const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a
                 { value: 'dark', label: t('dark'), icon: 'moon' },
               ]"
             />
+          </div>
+          <div class="st-row">
+            <span class="st-label">{{ t('look') }}</span>
+            <Segmented v-model="settings.look" :options="lookOptions" />
           </div>
           <div class="st-row">
             <span class="st-label">{{ t('accentColor') }}</span>

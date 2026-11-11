@@ -10,6 +10,8 @@
   --line: #191919;
   --rule: rgba(25, 25, 25, 0.18);
   --bw: 1px;
+  --edge: var(--ink); /* control borders */
+  --edge-on: var(--ink); /* border of accent-filled selected states */
   /* text */
   --text: #191919;
   --text-2: #3d3c37;
@@ -81,7 +83,7 @@ button:disabled { cursor: default; opacity: 0.5; }
 
 kbd {
   font: 700 11px/1 var(--font-mono);
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   padding: 3px 6px;
   color: var(--text);
   background: var(--card);
@@ -99,7 +101,7 @@ kbd {
   transition: background 0.1s, color 0.1s;
 }
 .icon-btn:hover { background: var(--hover); color: var(--text); }
-.icon-btn.on { background: var(--accent); color: var(--on-accent); border-color: var(--ink); }
+.icon-btn.on { background: var(--accent); color: var(--on-accent); border-color: var(--edge-on); }
 
 /* Buttons */
 .btn {
@@ -109,7 +111,7 @@ kbd {
   gap: 7px;
   height: 40px;
   padding: 0 18px;
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 13px;
@@ -138,7 +140,7 @@ kbd {
 .input {
   width: 100%;
   height: 44px;
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   border-radius: 0;
   padding: 0 13px;
   font: inherit;
@@ -176,7 +178,7 @@ html.dark .select {
   flex: none;
   width: 44px;
   height: 24px;
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   background: var(--card);
   transition: background 0.15s;
 }
@@ -197,7 +199,7 @@ html.dark .select {
 .seg {
   display: inline-flex;
   flex: none;
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   background: var(--card);
 }
 .seg button {
@@ -213,7 +215,7 @@ html.dark .select {
   color: var(--text-2);
   white-space: nowrap;
 }
-.seg button + button { border-left: var(--bw) solid var(--ink); }
+.seg button + button { border-left: var(--bw) solid var(--edge); }
 .seg button:hover { color: var(--text); background: var(--hover); }
 .seg button.on { background: var(--accent); color: var(--on-accent); }
 
@@ -224,7 +226,7 @@ html.dark .select {
   place-items: center;
   width: 28px;
   height: 28px;
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   color: var(--on-accent);
   transition: transform 0.1s, box-shadow 0.1s;
 }
@@ -310,7 +312,7 @@ html.dark .tag { background: hsl(var(--h), 70%, 78%); }
   gap: 6px;
   min-height: 44px;
   padding: 7px 10px;
-  border: var(--bw) solid var(--ink);
+  border: var(--bw) solid var(--edge);
   background: var(--card);
   cursor: text;
   transition: box-shadow 0.1s;

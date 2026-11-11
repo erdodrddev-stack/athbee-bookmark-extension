@@ -1,0 +1,177 @@
+/*
+ * Looks (aesthetics). "brutal" is the default defined in base.css / newtab.css.
+ * "modern" and "cyber" share the soft structure (rounded corners, sans display font);
+ * each then sets its own tokens. All of them keep the same palette and accent.
+ */
+
+/* ============ Shared soft structure (modern + cyber) ============ */
+:is(html[data-look='modern'], html[data-look='cyber']) {
+  --r-sm: 6px;
+  --r: 10px;
+  --r-lg: 14px;
+  --font-display: var(--font);
+}
+
+/* corners */
+:is([data-look='modern'], [data-look='cyber']) :is(
+  .modal, .adv, .ctx, .col, .tag-suggest, .qr-canvas, .pp-qr canvas, .empty, .toast
+) { border-radius: var(--r-lg); }
+:is([data-look='modern'], [data-look='cyber']) :is(
+  .bm, .search, .input, .tag-input, .btn, .seg, .seg-mini, .sr-crit, .sr-row, .tree-row,
+  .st-tabs button, .icon-btn, .sr-ico, .fsec-title, .crumb, .hsec-link, .ctx-item, .sr-edit, .toast-action
+) { border-radius: var(--r); }
+:is([data-look='modern'], [data-look='cyber']) :is(
+  kbd, .search-filter, .search-clear, .tree-chevron, .tag-x, .folder-ico, .input-action, .sr-crit-label
+) { border-radius: var(--r-sm); }
+:is([data-look='modern'], [data-look='cyber']) :is(.tag, .search-filter-n, .switch, .swatch, .tag-dot),
+:is([data-look='modern'], [data-look='cyber']) .switch::after {
+  border-radius: 999px;
+}
+:is([data-look='modern'], [data-look='cyber']) .modal { overflow: hidden; }
+:is([data-look='modern'], [data-look='cyber']) :is(.adv-head, .col-head) { border-radius: calc(var(--r-lg) - 1px) calc(var(--r-lg) - 1px) 0 0; }
+:is([data-look='modern'], [data-look='cyber']) .sr-crit-label { border-radius: var(--r-sm) 0 0 var(--r-sm); margin-left: 3px; }
+:is([data-look='modern'], [data-look='cyber']) .seg { padding: 2px; gap: 2px; }
+:is([data-look='modern'], [data-look='cyber']) .seg button { border-radius: calc(var(--r) - 3px); }
+:is([data-look='modern'], [data-look='cyber']) .seg button + button { border-left: 0; }
+:is([data-look='modern'], [data-look='cyber']) .seg-mini { padding: 2px; gap: 2px; }
+:is([data-look='modern'], [data-look='cyber']) .seg-mini .icon-btn { height: 28px; border-radius: calc(var(--r) - 3px); }
+:is([data-look='modern'], [data-look='cyber']) .seg-mini .icon-btn + .icon-btn { border-left: 0; }
+:is([data-look='modern'], [data-look='cyber']) .ctx { padding: 4px; }
+:is([data-look='modern'], [data-look='cyber']) .ctx-div { margin: 4px -4px; }
+:is([data-look='modern'], [data-look='cyber']) .tag-suggest { padding: 4px; }
+:is([data-look='modern'], [data-look='cyber']) .tag-suggest-item { border-radius: var(--r-sm); }
+:is([data-look='modern'], [data-look='cyber']) .tag-suggest-item + .tag-suggest-item { border-top: 0; }
+:is([data-look='modern'], [data-look='cyber']) .custom-scroll::-webkit-scrollbar-thumb { border-radius: 999px; }
+:is([data-look='modern'], [data-look='cyber']) .st-range input::-webkit-slider-runnable-track { border-radius: 999px; }
+:is([data-look='modern'], [data-look='cyber']) .st-range input::-webkit-slider-thumb { width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; }
+:is([data-look='modern'], [data-look='cyber']) .st-range input::-moz-range-thumb { border-radius: 50%; width: 16px; }
+:is([data-look='modern'], [data-look='cyber']) { --logo-r: 24px; }
+
+/* display type: bold grotesk instead of Archivo Black */
+:is([data-look='modern'], [data-look='cyber']) :is(
+  .brand, .crumb.last, .adv-title, .hsec-title, .fsec-title, .col-head, .st-about-name, .modal-head h3, .pp-brand
+) { font-weight: 700; }
+
+/* motion: lift straight up instead of the diagonal offset */
+:is([data-look='modern'], [data-look='cyber']) .bm:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+:is([data-look='modern'], [data-look='cyber']) .bm:active { transform: none; box-shadow: var(--shadow-sm); }
+:is([data-look='modern'], [data-look='cyber']) :is(.btn-primary, .btn-danger) { box-shadow: var(--shadow-sm); }
+:is([data-look='modern'], [data-look='cyber']) :is(.btn-primary, .btn-danger):hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+:is([data-look='modern'], [data-look='cyber']) :is(.btn-primary, .btn-danger):active { transform: none; box-shadow: none; }
+:is([data-look='modern'], [data-look='cyber']) :is(.swatch:hover, .swatch.on) { transform: scale(1.1); }
+:is([data-look='modern'], [data-look='cyber']) .tag.clickable:hover { transform: translateY(-1px); }
+:is([data-look='modern'], [data-look='cyber']) .toast { box-shadow: var(--shadow-lg); }
+:is([data-look='modern'], [data-look='cyber']) kbd { box-shadow: none; }
+:is([data-look='modern'], [data-look='cyber']) .switch::after { top: 3px; left: 3px; width: 18px; height: 18px; }
+:is([data-look='modern'], [data-look='cyber']) .switch { width: 46px; height: 26px; }
+:is([data-look='modern'], [data-look='cyber']) .st-range input:active::-webkit-slider-thumb { transform: none; }
+@keyframes soft-pop { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
+@keyframes soft-in { from { opacity: 0; transform: translateY(4px); } }
+:is([data-look='modern'], [data-look='cyber']) :is(.modal, .adv, .ctx) { animation-name: soft-pop; }
+:is([data-look='modern'], [data-look='cyber']) .bm { animation-name: soft-in; }
+html.no-anim:is([data-look='modern'], [data-look='cyber']) .bm { animation: none; }
+
+/* ============ Moderno: sober, soft lines and shadows ============ */
+html[data-look='modern'] {
+  --hover: rgba(25, 25, 25, 0.05);
+  --dot: transparent;
+  --line: rgba(25, 25, 25, 0.1);
+  --edge: rgba(25, 25, 25, 0.18);
+  --edge-on: transparent;
+  --rule: rgba(25, 25, 25, 0.08);
+  --shadow-sm: 0 1px 2px rgba(25, 25, 25, 0.06), 0 2px 6px rgba(25, 25, 25, 0.06);
+  --shadow: 0 2px 4px rgba(25, 25, 25, 0.05), 0 8px 22px rgba(25, 25, 25, 0.09);
+  --shadow-lg: 0 6px 12px rgba(25, 25, 25, 0.06), 0 20px 48px rgba(25, 25, 25, 0.16);
+  --focus-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+html.dark[data-look='modern'] {
+  --hover: rgba(255, 255, 240, 0.06);
+  --line: rgba(255, 255, 240, 0.1);
+  --edge: rgba(255, 255, 240, 0.2);
+  --rule: rgba(255, 255, 240, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 8px 22px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 6px 12px rgba(0, 0, 0, 0.3), 0 20px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* sentence case, sans labels and buttons */
+[data-look='modern'] :is(.brand, .crumb.last, .adv-title, .hsec-title, .fsec-title, .col-head, .st-about-name, .modal-head h3, .pp-brand) {
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+[data-look='modern'] .hsec-title { font-size: 26px; letter-spacing: -0.02em; }
+[data-look='modern'] :is(.btn, .seg button, .toast-action, .sr-edit) {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+[data-look='modern'] :is(.field > label, .sb-label, .sr-group, .ctx-head, .hsec-sub, .st-sc-title, .sr-crit-label) {
+  font-family: var(--font);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+[data-look='modern'] .sr-edit { text-decoration: none; color: var(--text-2); }
+[data-look='modern'] .sr-edit:hover { color: var(--text); }
+
+/* accent bands become calm headers */
+[data-look='modern'] :is(.modal-head, .adv-head, .pp-head) {
+  background: var(--card);
+  color: var(--text);
+  border-bottom-color: var(--rule);
+}
+[data-look='modern'] .pp-head { background: var(--bg); }
+[data-look='modern'] :is(.modal-head, .adv-head, .pp-head) .icon-btn { color: var(--text-2); }
+[data-look='modern'] :is(.modal-head, .adv-head, .pp-head) .icon-btn:hover { background: var(--hover); color: var(--text); }
+
+/* quieter cards and tags */
+[data-look='modern'] .bm:hover { border-color: var(--line); }
+[data-look='modern'] .col .bm:hover { border-color: transparent; }
+[data-look='modern'] :is(.tag, .tag-dot, .tag-ico) { border-color: transparent; }
+[data-look='modern'] .btn-ghost { border-color: var(--edge); }
+[data-look='modern'] .search-filter-n { background: var(--accent); color: var(--on-accent); }
+[data-look='modern'] .swatch { border-color: var(--edge); }
+
+/* ============ Cyberpunk: modern structure, high contrast + neon accent ============ */
+html[data-look='cyber'] {
+  --card: #fffff0;
+  --hover: color-mix(in srgb, var(--accent) 22%, #fffff0);
+  --dot: rgba(25, 25, 25, 0.16);
+  --line: var(--ink);
+  --edge: var(--ink);
+  --edge-on: var(--ink);
+  --rule: rgba(25, 25, 25, 0.45);
+  --text-2: #191919;
+  --text-3: #45443e;
+  --glow: color-mix(in srgb, var(--accent) 60%, transparent);
+  --shadow-sm: 0 0 0 1px var(--accent), 0 0 10px var(--glow);
+  --shadow: 0 0 0 2px var(--accent), 0 0 18px var(--glow);
+  --shadow-lg: 0 0 0 2px var(--accent), 0 0 36px var(--glow);
+  --focus-shadow: 0 0 0 3px var(--accent), 0 0 16px var(--glow);
+}
+html.dark[data-look='cyber'] {
+  --card: #191919;
+  --hover: color-mix(in srgb, var(--accent) 20%, #191919);
+  --dot: rgba(255, 255, 240, 0.14);
+  --rule: rgba(255, 255, 240, 0.4);
+  --text-2: #fffff0;
+  --text-3: #cfcec1;
+  --glow: color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* uppercase, wide tracked display type; mono stays for labels */
+[data-look='cyber'] :is(.brand, .crumb.last, .adv-title, .hsec-title, .fsec-title, .col-head, .st-about-name, .modal-head h3, .pp-brand) {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+[data-look='cyber'] .hsec-title { font-size: 26px; }
+[data-look='cyber'] .sparkle, [data-look='cyber'] .sb-resize::after { filter: drop-shadow(0 0 6px var(--glow)); }
+
+/* selected states glow */
+[data-look='cyber'] :is(.tree-row.active, .sr-row.active, .st-tabs button.on, .seg button.on, .switch.on, .search-filter.on) {
+  box-shadow: 0 0 12px var(--glow);
+}
+[data-look='cyber'] .seg button.on, [data-look='cyber'] .seg-mini .icon-btn.on { box-shadow: 0 0 0 1px var(--ink), 0 0 10px var(--glow); }
+[data-look='cyber'] .search-filter-n { background: var(--accent); color: var(--on-accent); box-shadow: 0 0 0 1px var(--ink); }
+[data-look='cyber'] .toast { box-shadow: 0 0 0 2px var(--accent), 0 0 24px var(--glow); }

@@ -9,6 +9,8 @@ export const ACCENTS = [
   { id: 'blue', hex: '#74b9ff' },
 ]
 
+export const LOOKS = ['brutal', 'modern', 'cyber']
+
 export const DEFAULTS = {
   lang: 'auto',
   openIn: 'current', // 'current' | 'new'
@@ -19,6 +21,7 @@ export const DEFAULTS = {
   showHidden: false,
   theme: 'system', // 'system' | 'light' | 'dark'
   accent: 'yellow', // one of ACCENTS[].id
+  look: 'brutal', // one of LOOKS
   style: 'card', // 'card' | 'compact'
   layout: 'grid', // 'grid' | 'columns'
   width: 240,
@@ -117,7 +120,8 @@ export function applyTheme() {
     root.classList.toggle('no-anim', settings.disableAnimations)
     const accent = ACCENTS.find((a) => a.id === settings.accent) ?? ACCENTS[0]
     root.style.setProperty('--accent', accent.hex)
+    root.dataset.look = LOOKS.includes(settings.look) ? settings.look : LOOKS[0]
   }
-  watch(() => [settings.theme, settings.accent, settings.disableAnimations], update, { immediate: true })
+  watch(() => [settings.theme, settings.accent, settings.look, settings.disableAnimations], update, { immediate: true })
   mq.addEventListener('change', update)
 }
