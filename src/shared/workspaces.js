@@ -20,10 +20,20 @@ export function inWorkspace(n) {
   return false
 }
 
-/** Folders listed at the top of the sidebar and on the home page, or null for "everything". */
+/**
+ * Folders listed at the top of the sidebar and on the home page, or null for "everything".
+ * A folder nested inside another of the workspace's folders (e.g. after being moved there)
+ * is left out, since it already shows up inside its ancestor.
+ */
 export const wsFolders = computed(() => {
   void byId.value
-  return activeWs.value ? activeWs.value.folders.map(getNode).filter((n) => n && !n.url) : null
+  if (!activeWs.value) return null
+  const set = folderSet.value
+  const nested = (n) => {
+    for (let x = getNode(n.parentId); x; x = getNode(x.parentId)) if (set.has(x.id)) return true
+    return false
+  }
+  return activeWs.value.folders.map(getNode).filter((n) => n && !n.url && !nested(n))
 })
 
 export function switchWorkspace(id) {
