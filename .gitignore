@@ -3,3 +3,4 @@ dist/
 .venv/
 tests/e2e/.tmp/
 __pycache__/
+*.zip

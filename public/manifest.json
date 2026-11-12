@@ -1,16 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Bookdeck",
-  "version": "0.1.0",
-  "description": "Uma nova guia para acessar e organizar seus favoritos, com recomendações baseadas no seu histórico.",
-  "permissions": ["bookmarks", "storage", "history", "tabs", "favicon", "search", "tabGroups"],
-  "optional_host_permissions": ["<all_urls>"],
+  "name": "__MSG_appName__",
+  "version": "0.2.0",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
+  "permissions": [
+    "bookmarks",
+    "storage",
+    "history",
+    "tabs",
+    "favicon",
+    "search",
+    "tabGroups"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Bookdeck",
+    "default_title": "__MSG_appName__",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",

@@ -526,6 +526,23 @@ body.resizing { cursor: col-resize; user-select: none; }
 .st-range output { width: 48px; font-family: var(--font-mono); font-size: 12px; color: var(--text-2); text-align: right; font-variant-numeric: tabular-nums; }
 .st-row .btn { flex: none; gap: 8px; }
 
+/* ---------- Welcome / what's new ---------- */
+.wl { padding-bottom: 8px; }
+.wl-step { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 250px; padding: 8px 12px 0; }
+.wl-art {
+  display: grid; place-items: center; width: 96px; height: 96px; margin-bottom: 18px;
+  border: var(--bw) solid var(--edge); background: var(--accent); color: var(--on-accent); box-shadow: var(--shadow);
+}
+.wl-h { margin: 0 0 10px; font-family: var(--font-display); font-size: 22px; font-weight: 400; text-transform: uppercase; }
+.wl-p { max-width: 420px; margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-2); }
+.wl-dots { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
+.wl-dot { width: 10px; height: 10px; padding: 0; border: var(--bw) solid var(--edge); background: var(--card); }
+.wl-dot.on { background: var(--accent); }
+.wl-lead { margin: 0 0 14px; font-size: 14px; }
+.wl-news { margin: 0; padding: 0; list-style: none; }
+.wl-news li { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-top: var(--bw) solid var(--rule); font-size: 14px; }
+.wl-ico { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border: var(--bw) solid var(--edge); background: var(--accent); color: var(--on-accent); }
+
 /* ---------- Workspaces ---------- */
 .ws-switch {
   display: flex; align-items: center; gap: 8px; margin: 0 10px 6px; padding: 0 10px; height: 36px;

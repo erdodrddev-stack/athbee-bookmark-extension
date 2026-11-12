@@ -11,6 +11,7 @@ import MaintenanceDialog from './dialogs/MaintenanceDialog.vue'
 import BulkMoveDialog from './dialogs/BulkMoveDialog.vue'
 import BulkTagsDialog from './dialogs/BulkTagsDialog.vue'
 import WorkspacesDialog from './dialogs/WorkspacesDialog.vue'
+import WelcomeDialog from './dialogs/WelcomeDialog.vue'
 
 const MAP = {
   bookmark: BookmarkDialog,
@@ -24,6 +25,7 @@ const MAP = {
   bulkMove: BulkMoveDialog,
   bulkTags: BulkTagsDialog,
   workspaces: WorkspacesDialog,
+  welcome: WelcomeDialog,
 }
 </script>
 

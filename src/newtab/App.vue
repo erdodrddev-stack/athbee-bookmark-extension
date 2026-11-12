@@ -6,7 +6,8 @@ import { loadHistory } from '../shared/history'
 import { refreshUsage } from '../shared/usage'
 import { pruneTags } from '../shared/tags'
 import { t } from '../shared/i18n'
-import { ui, go, isSearching, inFolder } from './ui'
+import { isExt } from '../shared/util'
+import { ui, go, isSearching, inFolder, openDialog } from './ui'
 import Sidebar from './components/Sidebar.vue'
 import TopBar from './components/TopBar.vue'
 import HomeView from './components/HomeView.vue'
@@ -31,6 +32,7 @@ onMounted(async () => {
   watchBookmarkEvents()
   if (settings.autoOpenLast && meta.lastFolder && (meta.lastFolder === 'sessions' || getNode(meta.lastFolder))) ui.current = meta.lastFolder
   ready.value = true
+  greet()
   loadHistory()
   // keep last-visit dates growing past the browser's history window (throttled inside)
   setTimeout(() => refreshUsage().catch(() => {}), 3000)
@@ -40,6 +42,22 @@ watch(() => ui.current, (id) => {
   meta.lastFolder = id
   if (content.value) content.value.scrollTop = 0
 })
+/** Welcome on a fresh install, "what's new" when the minor version changes. */
+function greet() {
+  const v = isExt ? chrome.runtime.getManifest().version : null
+  if (!v || meta.seenVersion === v) return
+  const minor = (x) => (x || '').split('.').slice(0, 2).join('.')
+  if (!meta.seenVersion) {
+    // 0.1 didn't record seenVersion: people with data already are upgrading, not new
+    const upgrading = meta.lastFolder || meta.pinned.length || Object.keys(meta.tags).length
+    openDialog('welcome', { mode: upgrading ? 'whatsnew' : 'welcome' })
+  } else if (minor(meta.seenVersion) !== minor(v)) {
+    openDialog('welcome', { mode: 'whatsnew' })
+  } else {
+    meta.seenVersion = v // patch release: nothing to announce
+  }
+}
+
 // Switching workspace away from the open folder → back home
 watch(() => meta.activeWs, () => {
   if (inFolder() && !inWorkspace(getNode(ui.current))) go('home')

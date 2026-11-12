@@ -45,6 +45,7 @@ const META_DEFAULTS = {
   dupIgnored: [], // duplicate groups (dupKey) the user chose to keep
   workspaces: [], // see shared/workspaces.js
   activeWs: null, // id of the active workspace, null = everything
+  seenVersion: null, // last version whose welcome / what's new was shown
 }
 
 export const settings = reactive({ ...DEFAULTS })

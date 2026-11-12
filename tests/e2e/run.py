@@ -98,6 +98,19 @@ with sync_playwright() as p:
     page.goto(NEWTAB)
     page.wait_for_selector('.brand')
 
+    @step('welcome tour on first run, not shown again')
+    def _():
+        page.wait_for_selector('.wl-step')
+        page.wait_for_timeout(400)
+        shot('00-welcome')
+        for _ in range(3):
+            page.get_by_role('button', name='Próximo').click()
+        expect('navegador' in page.locator('.wl-h').inner_text().lower(), 'last step not reached')
+        page.get_by_role('button', name='Vamos lá').click()
+        page.wait_for_selector('.wl', state='detached')
+        page.reload(); page.wait_for_selector('.brand'); page.wait_for_timeout(800)
+        expect(page.locator('.wl').count() == 0, 'welcome shown again after reload')
+
     # ---- seed bookmarks through the extension's own API access ----
     page.evaluate("""async (site) => {
       const bar = '1', other = '2'
@@ -286,6 +299,18 @@ with sync_playwright() as p:
         page.locator('.theme-switch button, .theme-switch').last.click()
         page.wait_for_timeout(300)
         shot('12-dark-columns')
+
+    @step("what's new after updating from 0.1")
+    def _():
+        # a 0.1 profile: has data but no seenVersion
+        page.evaluate("async () => { const { meta } = await chrome.storage.local.get('meta'); delete meta.seenVersion; meta.lastFolder = '1'; await chrome.storage.local.set({ meta }) }")
+        page.reload(); page.wait_for_selector('.wl-news')
+        expect(page.locator('.wl-news li').count() == 6, 'news list incomplete')
+        page.wait_for_timeout(400)  # let the dialog's pop-in animation finish
+        shot('13-whats-new')
+        page.get_by_role('button', name='Vamos lá').click()
+        page.reload(); page.wait_for_selector('.brand'); page.wait_for_timeout(800)
+        expect(page.locator('.wl').count() == 0, "what's new shown again")
 
     ctx.close()
 srv.shutdown()
