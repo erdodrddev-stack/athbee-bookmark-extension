@@ -7,7 +7,8 @@ without the "ATHBEE BOOKMARKS" text and with a transparent background.
 The background is removed by flood fill from the crop's edges, so only background
 connected to the outside goes transparent (the bee's dark stripes stay). Edges get a
 soft alpha ramp, with the old background color taken back out of their pixels.
-Output: public/icons/icon-{16,32,48,128}.png, logo-256.png and logo-512.png.
+Output: public/icons/icon-{16,32,48,128}.png, logo-256.png and logo-512.png, plus
+docs/store/images/store-icon-128.png (96 px artwork on a 128 px canvas, as the store asks).
 """
 import base64, os
 from playwright.sync_api import sync_playwright
@@ -78,6 +79,20 @@ JS = """async ({ src, crop, sizes }) => {
     let s = ''; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode(...buf.subarray(i, i + 0x8000))
     out[name] = btoa(s)
   }
+  // the store icon: 96 px of artwork centered in 128 px with transparent padding
+  {
+    const fin = new OffscreenCanvas(128, 128), fg = fin.getContext('2d')
+    let cur = sq
+    while (cur.width / 2 > 96) {
+      const half = new OffscreenCanvas(Math.round(cur.width / 2), Math.round(cur.height / 2))
+      const hg = half.getContext('2d'); hg.imageSmoothingQuality = 'high'
+      hg.drawImage(cur, 0, 0, half.width, half.height); cur = half
+    }
+    fg.imageSmoothingQuality = 'high'; fg.drawImage(cur, 16, 16, 96, 96)
+    const buf = new Uint8Array(await (await fin.convertToBlob({ type: 'image/png' })).arrayBuffer())
+    let s = ''; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode(...buf.subarray(i, i + 0x8000))
+    out['store-icon-128'] = btoa(s)
+  }
   return { out, trimmed: [tw, th], background: bg }
 }"""
 
@@ -88,6 +103,8 @@ with sync_playwright() as p:
     page = browser.new_page()
     r = page.evaluate(JS, {'src': src, 'crop': list(CROP), 'sizes': SIZES})
     browser.close()
+STORE = os.path.join(ROOT, 'docs', 'store', 'images')
 for name, b64 in r['out'].items():
-    open(os.path.join(OUT, name + '.png'), 'wb').write(base64.b64decode(b64))
+    folder = STORE if name.startswith('store-') else OUT
+    open(os.path.join(folder, name + '.png'), 'wb').write(base64.b64decode(b64))
 print('artwork', r['trimmed'], 'background', r['background'], '->', ', '.join(SIZES))
