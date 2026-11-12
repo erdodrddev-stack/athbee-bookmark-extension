@@ -77,7 +77,7 @@ def setup(page, lang, ids):
             {'id': 'wlife', 'name': t['ws_life'], 'folders': [ids['personal'], ids['study']], 'accent': 'green', 'look': None}]
     meta = {'pinned': [ids['Gmail'], ids[t['cal']], ids['Notion'], ids['docs']], 'hidden': [], 'tags': tags, 'tagColors': colors,
             'workspaces': work, 'activeWs': None, 'seenVersion': '0.2.0', 'historyOpen': False, 'expanded': {'1': True, ids['work']: True}}
-    settings = {'lang': lang, 'theme': 'light', 'look': 'brutal', 'accent': 'yellow', 'style': 'card', 'layout': 'grid', 'width': 230}
+    settings = {'lang': lang, 'theme': 'light', 'look': 'modern', 'accent': 'yellow', 'style': 'card', 'layout': 'grid', 'width': 230}
     now = int(time.time() * 1000)
     g = lambda title, color: {'title': title, 'color': color}
     sessions = [
@@ -97,7 +97,9 @@ def setup(page, lang, ids):
             {'url': 'https://slack.com/', 'title': 'Slack'}, {'url': 'https://www.notion.so/', 'title': 'Notion'},
             {'url': 'https://trello.com/', 'title': 'Trello'}, {'url': 'https://calendar.google.com/', 'title': t['cal']}]},
     ]
-    page.evaluate("async (d) => { await chrome.storage.local.set(d) }", {'meta': meta, 'settings': settings, 'sessions': sessions})
+    # Pro on, so the paid screens (workspace looks, whole-library link check, cyberpunk) render without locks
+    license = {'pro': True, 'source': 'dev', 'since': now}
+    page.evaluate("async (d) => { await chrome.storage.local.set(d) }", {'meta': meta, 'settings': settings, 'sessions': sessions, 'license': license})
 
 def run_lang(p, lang):
     profile = os.path.join(TMP, 'profile-' + lang)
