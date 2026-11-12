@@ -1,6 +1,5 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import Modal from '../../../components/Modal.vue'
 import Icon from '../../../components/Icon.vue'
 import TagPill from '../../../components/TagPill.vue'
 import { t } from '../../../shared/i18n'
@@ -10,8 +9,6 @@ import { faviconUrl, hostOf } from '../../../shared/util'
 import { toast } from '../../ui'
 import { openUrl } from '../../actions'
 import { duplicateGroups, extraCopies, ignoreGroup, clearIgnored, resolve } from '../../duplicates'
-
-const emit = defineEmits(['close'])
 
 // group key -> id of the bookmark to keep; defaults to the suggested one (first)
 const picked = reactive({})
@@ -47,8 +44,7 @@ const ignoredCount = computed(() => meta.dupIgnored.length)
 </script>
 
 <template>
-  <Modal :title="t('duplicates')" width="720px" @close="emit('close')">
-    <div class="dup">
+  <div class="dup">
       <template v-if="duplicateGroups.length">
         <p class="lc-intro">{{ t('dupIntro', { groups: duplicateGroups.length, n: extraCopies }) }}</p>
         <p class="st-hint">{{ t('dupHint') }}</p>
@@ -101,19 +97,11 @@ const ignoredCount = computed(() => meta.dupIgnored.length)
         {{ t('dupIgnoredCount', { n: ignoredCount }) }}
         <button class="link-btn" @click="clearIgnored">{{ t('dupShowIgnored') }}</button>
       </p>
-    </div>
 
-    <template #footer>
-      <button class="btn btn-ghost" @click="emit('close')">{{ t('close') }}</button>
-      <button
-        v-if="duplicateGroups.length"
-        class="btn"
-        :class="confirming ? 'btn-danger' : 'btn-primary'"
-        :disabled="busy"
-        @click="resolveAll"
-      >
+    <div v-if="duplicateGroups.length" class="mt-actions">
+      <button class="btn" :class="confirming ? 'btn-danger' : 'btn-primary'" :disabled="busy" @click="resolveAll">
         {{ confirming ? t('dupConfirmAll', { n: extraCopies }) : t('dupResolveAll') }}
       </button>
-    </template>
-  </Modal>
+    </div>
+  </div>
 </template>

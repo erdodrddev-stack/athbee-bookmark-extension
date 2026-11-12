@@ -495,6 +495,20 @@ body.resizing { cursor: col-resize; user-select: none; }
 .st-range output { width: 48px; font-family: var(--font-mono); font-size: 12px; color: var(--text-2); text-align: right; font-variant-numeric: tabular-nums; }
 .st-row .btn { flex: none; gap: 8px; }
 
+/* ---------- Maintenance ---------- */
+.mt-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin: -4px 0 18px; padding-bottom: 12px; border-bottom: var(--bw) solid var(--rule); }
+.mt-tabs button {
+  display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px;
+  border: var(--bw) solid transparent; font-size: 13px; color: var(--text-2);
+}
+.mt-tabs button:hover { background: var(--hover); color: var(--text); }
+.mt-tabs button.on { background: var(--accent); border-color: var(--edge-on); color: var(--on-accent); font-weight: 700; }
+.mt-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 400; opacity: 0.8; }
+.mt-actions {
+  position: sticky; bottom: 0; display: flex; justify-content: flex-end; gap: 8px;
+  margin-top: 16px; padding: 12px 0 16px; background: var(--card); border-top: var(--bw) solid var(--rule);
+}
+
 /* ---------- Broken-link checker ---------- */
 .lc { min-height: 120px; padding-bottom: 8px; }
 .lc-intro { margin: 0 0 10px; font-size: 14px; line-height: 1.55; }
@@ -547,6 +561,19 @@ body.resizing { cursor: col-resize; user-select: none; }
 .dup-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 28px 0 12px; text-align: center; }
 .dup-empty svg { color: var(--accent); }
 .dup-ignored { margin-top: 18px; }
+.stale { padding-bottom: 8px; }
+.stale-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.stale-loading { padding: 24px 0; text-align: center; }
+.stale-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 16px 0 8px; }
+.stale-all { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.stale-all input, .stale-row input { margin: 0; accent-color: var(--accent); }
+.stale-acts { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.stale-acts .btn { gap: 6px; }
+.stale-move { display: flex; align-items: center; gap: 4px; }
+.stale-dest { width: 170px; height: 32px; font-size: 12px; }
+.stale-row { cursor: pointer; padding: 8px; }
+.stale-row:hover { background: var(--hover); }
+.stale-when { flex: none; font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
 .link-btn { padding: 0; border: 0; background: none; color: var(--text); font: inherit; text-decoration: underline; cursor: pointer; }
 .bk-box { margin-top: 14px; padding: 14px 16px; border: var(--bw) solid var(--edge); background: var(--bg); }
 .bk-file { font-family: var(--font-mono); font-size: 13px; font-weight: 700; word-break: break-all; }

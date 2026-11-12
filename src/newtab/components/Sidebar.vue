@@ -12,6 +12,14 @@ import { check } from '../linkcheck'
 import { extraCopies } from '../duplicates'
 import { isVisible } from '../sort'
 
+const linkIssues = computed(() => (check.finishedAt ? check.results.length : 0))
+const issues = computed(() => extraCopies.value + linkIssues.value)
+// open on the tab that has something to show
+function openMaintenance() {
+  const tab = check.running || linkIssues.value ? 'links' : extraCopies.value ? 'duplicates' : 'stale'
+  openDialog('maintenance', { tab })
+}
+
 const roots = computed(() => {
   void byId.value
   return topFolders()
@@ -69,18 +77,12 @@ function startResize(e) {
     </nav>
 
     <div class="sb-foot">
-      <button class="tree-row" @click="openDialog('duplicates')">
+      <button class="tree-row" @click="openMaintenance">
         <span class="tree-chevron is-leaf" />
-        <span class="tree-ico"><Icon name="copy" :size="17" /></span>
-        <span class="tree-title">{{ t('duplicates') }}</span>
-        <span v-if="extraCopies" class="tree-count">{{ extraCopies }}</span>
-      </button>
-      <button class="tree-row" @click="openDialog('linkCheck')">
-        <span class="tree-chevron is-leaf" />
-        <span class="tree-ico"><Icon name="link-off" :size="17" /></span>
-        <span class="tree-title">{{ t('linkCheck') }}</span>
+        <span class="tree-ico"><Icon name="wrench" :size="17" /></span>
+        <span class="tree-title">{{ t('maintenance') }}</span>
         <span v-if="check.running" class="tree-count">{{ check.done }}/{{ check.total }}</span>
-        <span v-else-if="check.finishedAt && check.results.length" class="tree-count">{{ check.results.length }}</span>
+        <span v-else-if="issues" class="tree-count" :title="t('maintenanceIssues', { n: issues })">{{ issues }}</span>
       </button>
       <button class="tree-row" @click="openDialog('settings')">
         <span class="tree-chevron is-leaf" />

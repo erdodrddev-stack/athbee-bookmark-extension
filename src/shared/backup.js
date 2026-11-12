@@ -9,6 +9,7 @@ import { settings, meta, DEFAULTS, flushPersist } from './settings'
 import { setTags, normHex } from './tags'
 import { normUrl, plain } from './util'
 import { reloadTree } from './bookmarks'
+import { refreshUsage, mergeUsage } from './usage'
 
 export const BACKUP_APP = 'bookdeck'
 export const BACKUP_VERSION = 1
@@ -34,6 +35,7 @@ function exportNode(n) {
 export async function buildBackup() {
   await flushPersist()
   const [tree] = await chrome.bookmarks.getTree()
+  const u = await refreshUsage()
   return {
     app: BACKUP_APP,
     version: BACKUP_VERSION,
@@ -42,6 +44,8 @@ export async function buildBackup() {
     roots: (tree.children || []).filter((r) => !r.unmodifiable).map(exportNode),
     tagColors: { ...meta.tagColors },
     settings: plain(settings),
+    // last visit of each bookmarked page, so "unused" survives a move to another browser
+    usage: { since: u.since, oldest: u.oldest ?? u.since, last: u.last },
   }
 }
 
@@ -173,6 +177,8 @@ export async function importBackup(data, opts) {
       if (c) meta.tagColors[name] = c
     }
   }
+
+  if (opts.meta && data.usage) await mergeUsage(data.usage)
 
   if (opts.settings && data.settings) {
     for (const k of Object.keys(DEFAULTS)) {

@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue'
-import Modal from '../../../components/Modal.vue'
 import Icon from '../../../components/Icon.vue'
 import { t } from '../../../shared/i18n'
 import { getNode } from '../../../shared/bookmarks'
@@ -10,7 +9,6 @@ import { openUrl } from '../../actions'
 import { check, targets, requestAccess, runCheck, stopCheck, dismiss, updateUrls, removeAll } from '../../linkcheck'
 
 const props = defineProps({ scopeId: { type: String, default: null } })
-const emit = defineEmits(['close'])
 
 const scopeName = computed(() => (props.scopeId ? getNode(props.scopeId)?.title || t('untitled') : null))
 const count = computed(() => targets(props.scopeId).length)
@@ -59,8 +57,7 @@ async function fixGroup(items) {
 </script>
 
 <template>
-  <Modal :title="t('linkCheck')" width="680px" @close="emit('close')">
-    <div class="lc">
+  <div class="lc">
       <template v-if="!showResults">
         <p class="lc-intro">
           {{ scopeName ? t('lcIntroFolder', { n: count, name: scopeName }) : t('lcIntro', { n: count }) }}
@@ -121,14 +118,12 @@ async function fixGroup(items) {
           </ul>
         </section>
       </template>
-    </div>
 
-    <template #footer>
-      <button class="btn btn-ghost" @click="emit('close')">{{ t('close') }}</button>
+    <div class="mt-actions">
       <button v-if="check.running" class="btn btn-danger" @click="stopCheck">{{ t('lcStop') }}</button>
       <button v-else class="btn btn-primary" :disabled="!count" @click="start">
         {{ showResults ? t('lcAgain') : t('lcStart') }}
       </button>
-    </template>
-  </Modal>
+    </div>
+  </div>
 </template>

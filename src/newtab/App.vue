@@ -3,6 +3,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { settings, meta, loadPersisted, applyTheme } from '../shared/settings'
 import { reloadTree, watchBookmarkEvents, getNode, byId } from '../shared/bookmarks'
 import { loadHistory } from '../shared/history'
+import { refreshUsage } from '../shared/usage'
 import { pruneTags } from '../shared/tags'
 import { t } from '../shared/i18n'
 import { ui, go, isSearching } from './ui'
@@ -27,6 +28,8 @@ onMounted(async () => {
   if (settings.autoOpenLast && meta.lastFolder && getNode(meta.lastFolder)) ui.current = meta.lastFolder
   ready.value = true
   loadHistory()
+  // keep last-visit dates growing past the browser's history window (throttled inside)
+  setTimeout(() => refreshUsage().catch(() => {}), 3000)
 })
 
 watch(() => ui.current, (id) => {
