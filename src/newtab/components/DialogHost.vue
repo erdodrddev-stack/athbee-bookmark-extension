@@ -8,6 +8,7 @@ import SettingsDialog from './dialogs/SettingsDialog.vue'
 import TagRenameDialog from './dialogs/TagRenameDialog.vue'
 import TagColorDialog from './dialogs/TagColorDialog.vue'
 import LinkCheckDialog from './dialogs/LinkCheckDialog.vue'
+import DuplicatesDialog from './dialogs/DuplicatesDialog.vue'
 
 const MAP = {
   bookmark: BookmarkDialog,
@@ -18,6 +19,7 @@ const MAP = {
   tagRename: TagRenameDialog,
   tagColor: TagColorDialog,
   linkCheck: LinkCheckDialog,
+  duplicates: DuplicatesDialog,
 }
 </script>
 

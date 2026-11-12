@@ -9,6 +9,7 @@ import { t } from '../../shared/i18n'
 import { topFolders, getNode, byId } from '../../shared/bookmarks'
 import { ui, go, openDialog, isSearching } from '../ui'
 import { check } from '../linkcheck'
+import { extraCopies } from '../duplicates'
 import { isVisible } from '../sort'
 
 const roots = computed(() => {
@@ -68,6 +69,12 @@ function startResize(e) {
     </nav>
 
     <div class="sb-foot">
+      <button class="tree-row" @click="openDialog('duplicates')">
+        <span class="tree-chevron is-leaf" />
+        <span class="tree-ico"><Icon name="copy" :size="17" /></span>
+        <span class="tree-title">{{ t('duplicates') }}</span>
+        <span v-if="extraCopies" class="tree-count">{{ extraCopies }}</span>
+      </button>
       <button class="tree-row" @click="openDialog('linkCheck')">
         <span class="tree-chevron is-leaf" />
         <span class="tree-ico"><Icon name="link-off" :size="17" /></span>

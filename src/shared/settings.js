@@ -42,6 +42,7 @@ const META_DEFAULTS = {
   tags: {}, // bookmarkId -> ['tag', ...]
   tagColors: {}, // tag -> '#rrggbb' chosen by the user
   tagsOpen: true,
+  dupIgnored: [], // duplicate groups (dupKey) the user chose to keep
 }
 
 export const settings = reactive({ ...DEFAULTS })

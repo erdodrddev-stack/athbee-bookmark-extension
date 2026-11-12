@@ -6,8 +6,8 @@
  * asks for (as an optional permission) when the user starts a check.
  */
 import { reactive } from 'vue'
-import { allBookmarks, getNode, pathTo, reloadTree } from '../shared/bookmarks'
-import { tagsOf, setTags } from '../shared/tags'
+import { allBookmarks, getNode, pathTo } from '../shared/bookmarks'
+import { removeBookmarks } from './actions'
 import { normUrl } from '../shared/util'
 
 const ORIGINS = { origins: ['<all_urls>'] }
@@ -168,28 +168,12 @@ export async function updateUrls(items) {
   }
 }
 
-/** Delete bookmarks; returns an undo function that recreates them with their tags. */
+/** Delete bookmarks; returns an undo function that brings them (and their results) back. */
 export async function removeAll(items) {
-  const snaps = []
-  for (const r of items) {
-    const n = getNode(r.id)
-    if (!n) { dismiss(r.id); continue }
-    snaps.push({ r, snap: { parentId: n.parentId, index: n.index, title: n.title, url: n.url }, tags: [...tagsOf(n.id)] })
-  }
-  // highest index first so the remaining indexes stay valid for undo
-  snaps.sort((a, b) => b.snap.index - a.snap.index)
-  for (const s of snaps) {
-    await chrome.bookmarks.remove(s.r.id)
-    dismiss(s.r.id)
-  }
+  const undo = await removeBookmarks(items.map((r) => r.id))
+  items.forEach((r) => dismiss(r.id))
   return async () => {
-    const made = []
-    for (const s of [...snaps].reverse()) made.push([s, await chrome.bookmarks.create(s.snap)])
-    // tags go on after the tree reload, or the cleanup of unknown ids could drop them
-    await reloadTree()
-    for (const [s, n] of made) {
-      if (s.tags.length) setTags(n.id, s.tags)
-      check.results.push({ ...s.r, id: n.id })
-    }
+    const ids = await undo()
+    for (const r of items) if (ids.has(r.id)) check.results.push({ ...r, id: ids.get(r.id) })
   }
 }

@@ -1,6 +1,6 @@
 import { settings, meta } from '../shared/settings'
 import { t } from '../shared/i18n'
-import { countBookmarks } from '../shared/bookmarks'
+import { countBookmarks, getNode, reloadTree } from '../shared/bookmarks'
 import { hostOf } from '../shared/util'
 import { toast, openDialog } from './ui'
 import { isVisible } from './sort'
@@ -67,6 +67,43 @@ export async function deleteBookmark(n) {
     const created = await chrome.bookmarks.create(snap)
     if (tags.length) setTags(created.id, tags)
   })
+}
+
+/**
+ * Delete several bookmarks at once. Returns an undo function that recreates
+ * them in place, with their tags, pinned and hidden state, and resolves to a
+ * Map of old id -> new id.
+ */
+export async function removeBookmarks(ids) {
+  const snaps = []
+  for (const id of ids) {
+    const n = getNode(id)
+    if (!n?.url) continue
+    snaps.push({
+      id,
+      snap: { parentId: n.parentId, index: n.index, title: n.title, url: n.url },
+      tags: [...tagsOf(id)],
+      pinned: meta.pinned.includes(id),
+      hidden: meta.hidden.includes(id),
+    })
+  }
+  // highest index first, so recreating in reverse order puts each one back in its slot
+  snaps.sort((a, b) => b.snap.index - a.snap.index)
+  for (const s of snaps) await chrome.bookmarks.remove(s.id)
+  return async () => {
+    const made = []
+    for (const s of [...snaps].reverse()) made.push([s, await chrome.bookmarks.create(s.snap)])
+    // flags go on after the tree reload, or the cleanup of unknown ids could drop them
+    await reloadTree()
+    const ids = new Map()
+    for (const [s, n] of made) {
+      ids.set(s.id, n.id)
+      if (s.tags.length) setTags(n.id, s.tags)
+      if (s.pinned) meta.pinned.push(n.id)
+      if (s.hidden) meta.hidden.push(n.id)
+    }
+    return ids
+  }
 }
 
 /** Tags of every bookmark inside a subtree, captured before deleting it. */

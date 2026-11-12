@@ -524,6 +524,30 @@ body.resizing { cursor: col-resize; user-select: none; }
 .lc-row:hover .lc-actions, .lc-actions:focus-within { opacity: 1; }
 .lc-actions .icon-btn { width: 30px; height: 30px; }
 .lc-del:hover { color: var(--danger); }
+
+/* ---------- Duplicates ---------- */
+.dup { padding-bottom: 8px; }
+.dup-group { margin-top: 20px; }
+.dup-ghead { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.dup-ghead > img { flex: none; }
+.dup-key { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 12px; font-weight: 700; }
+.dup-row { cursor: pointer; padding: 8px 8px; }
+.dup-row:hover { background: var(--hover); }
+.dup-row input { flex: none; margin: 0; accent-color: var(--accent); }
+.dup-row:not(.keep) .lc-text { opacity: 0.6; }
+.dup-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 11px; color: var(--text-2); }
+.dup-date { flex: none; font-family: var(--font-mono); }
+.dup-pin { margin-left: 4px; vertical-align: -1px; color: var(--text-3); }
+.dup-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.dup-badge {
+  flex: none; padding: 2px 7px; border: var(--bw) solid var(--line);
+  font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; color: var(--text-3);
+}
+.dup-row.keep .dup-badge { border-color: var(--edge-on); background: var(--accent); color: var(--on-accent); }
+.dup-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 28px 0 12px; text-align: center; }
+.dup-empty svg { color: var(--accent); }
+.dup-ignored { margin-top: 18px; }
+.link-btn { padding: 0; border: 0; background: none; color: var(--text); font: inherit; text-decoration: underline; cursor: pointer; }
 .bk-box { margin-top: 14px; padding: 14px 16px; border: var(--bw) solid var(--edge); background: var(--bg); }
 .bk-file { font-family: var(--font-mono); font-size: 13px; font-weight: 700; word-break: break-all; }
 .bk-sum { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 4px; padding: 0; list-style: none; font-size: 13px; color: var(--text-2); }
