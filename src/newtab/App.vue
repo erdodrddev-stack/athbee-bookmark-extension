@@ -20,6 +20,8 @@ import Toast from './components/Toast.vue'
 import SelectionBar from './components/SelectionBar.vue'
 import { sel, clearSelection } from './selection'
 import { inWorkspace, switchByIndex, pruneWorkspaces } from '../shared/workspaces'
+import { startSync } from '../shared/sync'
+import { maybeAutoBackup } from './autobackup'
 
 const ready = ref(false)
 const content = ref(null)
@@ -36,6 +38,8 @@ onMounted(async () => {
   loadHistory()
   // keep last-visit dates growing past the browser's history window (throttled inside)
   setTimeout(() => refreshUsage().catch(() => {}), 3000)
+  startSync().catch(() => {})
+  setTimeout(() => maybeAutoBackup().catch(() => {}), 5000)
 })
 
 watch(() => ui.current, (id) => {

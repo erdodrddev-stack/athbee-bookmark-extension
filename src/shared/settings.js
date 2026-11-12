@@ -1,5 +1,5 @@
 import { reactive, watch } from 'vue'
-import { isExt, plain } from './util'
+import { isExt, plain, normHex, readableOn } from './util'
 import { license, loadLicense, lookAllowed, FREE_LOOKS } from './premium'
 
 export const ACCENTS = [
@@ -21,7 +21,8 @@ export const DEFAULTS = {
   hideEmpty: false,
   showHidden: false,
   theme: 'system', // 'system' | 'light' | 'dark'
-  accent: 'yellow', // one of ACCENTS[].id
+  accent: 'yellow', // one of ACCENTS[].id, or 'custom' (Pro) for customAccent
+  customAccent: '#8b5cf6',
   look: 'modern', // one of LOOKS (brutal and cyber are Pro)
   style: 'card', // 'card' | 'compact' | 'icon'
   layout: 'grid', // 'grid' | 'columns'
@@ -32,6 +33,8 @@ export const DEFAULTS = {
   sidebarCollapsed: false,
   sortBy: 'default', // 'default' | 'alpha' | 'date' | 'freq'
   sortDir: 'asc',
+  autoBackup: 'off', // 'off' | 'daily' | 'weekly' (Pro)
+  autoBackupKeep: 10,
 }
 
 const META_DEFAULTS = {
@@ -55,7 +58,7 @@ export const meta = reactive(plain(META_DEFAULTS))
 const stores = { settings, meta }
 
 /** JSON with sorted keys: chrome.storage hands objects back with keys reordered. */
-function stable(v) {
+export function stable(v) {
   if (Array.isArray(v)) return '[' + v.map(stable).join(',') + ']'
   if (v && typeof v === 'object') {
     return '{' + Object.keys(v).sort().map((k) => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}'
@@ -117,6 +120,12 @@ export async function loadPersisted() {
   }
 }
 
+/** Hex of an accent id ('custom' is the user's own color, a Pro feature). */
+export function accentHex(id) {
+  if (id === 'custom') return (license.pro && normHex(settings.customAccent)) || ACCENTS[0].hex
+  return (ACCENTS.find((a) => a.id === id) ?? ACCENTS[0]).hex
+}
+
 export function applyTheme() {
   const mq = matchMedia('(prefers-color-scheme: dark)')
   const update = () => {
@@ -129,13 +138,16 @@ export function applyTheme() {
     const ws = license.pro ? meta.workspaces.find((w) => w.id === meta.activeWs) : null
     const accentId = ws?.accent || settings.accent
     const look = ws?.look || settings.look
-    const accent = ACCENTS.find((a) => a.id === accentId) ?? ACCENTS[0]
-    root.style.setProperty('--accent', accent.hex)
+    const hex = accentHex(accentId)
+    root.style.setProperty('--accent', hex)
+    // the presets are all light enough for dark text; a custom color may not be
+    if (ACCENTS.some((a) => a.hex === hex)) root.style.removeProperty('--on-accent')
+    else root.style.setProperty('--on-accent', readableOn(hex))
     // paid looks fall back to the free one without Pro (the choice is kept for later)
     root.dataset.look = LOOKS.includes(look) && lookAllowed(look) ? look : FREE_LOOKS[0]
   }
   watch(
-    () => [settings.theme, settings.accent, settings.look, settings.disableAnimations, meta.activeWs, meta.workspaces.map((w) => [w.accent, w.look]), license.pro],
+    () => [settings.theme, settings.accent, settings.customAccent, settings.look, settings.disableAnimations, meta.activeWs, meta.workspaces.map((w) => [w.accent, w.look]), license.pro],
     update,
     { immediate: true, deep: true },
   )

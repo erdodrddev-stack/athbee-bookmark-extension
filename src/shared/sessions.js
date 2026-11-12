@@ -28,6 +28,9 @@ async function write(list) {
   if (isExt) await chrome.storage.local.set({ [KEY]: list })
 }
 
+/** Replace every session (used by sync). */
+export const replaceSessions = (list) => write(Array.isArray(list) ? list : [])
+
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
 
 /** Tabs worth saving: real pages, not this extension or blank new tabs. */

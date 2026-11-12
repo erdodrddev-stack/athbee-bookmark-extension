@@ -21,7 +21,7 @@ export const FREE_LOOKS = ['modern']
 export const lookAllowed = (look) => license.pro || FREE_LOOKS.includes(look)
 
 /** Every paid feature, in the order the upgrade dialog lists them. */
-export const PRO_FEATURES = ['workspaces', 'sessions', 'looks', 'wsTheme', 'advSearch', 'stale', 'linkAll', 'bulkFix']
+export const PRO_FEATURES = ['sync', 'autoBackup', 'workspaces', 'sessions', 'looks', 'accentCustom', 'wsTheme', 'advSearch', 'stale', 'linkAll', 'bulkFix']
 
 /** Store installs carry an update_url; unpacked ones don't. */
 export const devInstall = isExt && !('update_url' in chrome.runtime.getManifest())

@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { meta } from './settings'
-import { collator } from './util'
+import { collator, normHex, readableOn } from './util'
 
 /** "#Meu Projeto " -> "meu-projeto" */
 export const normTag = (s) =>
@@ -49,20 +49,7 @@ export function tagHue(name) {
   return h % 360
 }
 
-/** "#abc" / "aabbcc" -> "#aabbcc", or null when it isn't a hex color. */
-export function normHex(s) {
-  let h = (s || '').trim().replace(/^#/, '').toLowerCase()
-  if (/^[0-9a-f]{3}$/.test(h)) h = h.replace(/./g, (c) => c + c)
-  return /^[0-9a-f]{6}$/.test(h) ? '#' + h : null
-}
-
-/** Dark or light text, whichever reads better on the given background. */
-export function readableOn(hex) {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
-  const lin = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
-  const lum = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
-  return lum > 0.22 ? '#191919' : '#fffff0'
-}
+export { normHex, readableOn } from './util'
 
 export const tagColor = (name) => meta.tagColors[name] || null
 

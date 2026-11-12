@@ -5,7 +5,7 @@ import Icon from '../../../components/Icon.vue'
 import Swatches from '../../../components/Swatches.vue'
 import Segmented from '../../../components/Segmented.vue'
 import { t } from '../../../shared/i18n'
-import { settings, meta, ACCENTS, LOOKS } from '../../../shared/settings'
+import { settings, meta, ACCENTS, LOOKS, accentHex } from '../../../shared/settings'
 import { root, flattenFolders } from '../../../shared/bookmarks'
 import { activeWs, createWorkspace, deleteWorkspace, switchWorkspace } from '../../../shared/workspaces'
 import { toast } from '../../ui'
@@ -62,7 +62,7 @@ const look = computed({
   get: () => (isPro.value && ws.value?.look) || '',
   set: (v) => { if (requirePro('wsTheme', proBack())) ws.value.look = v || null },
 })
-const globalHex = computed(() => (ACCENTS.find((a) => a.id === settings.accent) ?? ACCENTS[0]).hex)
+const globalHex = computed(() => accentHex(settings.accent))
 const accentOptions = computed(() => [
   { value: '', color: globalHex.value, label: t('wsDefault') },
   ...ACCENTS.map((a) => ({ value: a.id, color: a.hex, label: t('accent_' + a.id) })),
@@ -90,7 +90,7 @@ const pad = (d) => ({ paddingLeft: 8 + d * 18 + 'px' })
           :class="{ on: w.id === selected }"
           @click="selected = w.id"
         >
-          <span class="wsd-dot" :style="{ background: (isPro && ACCENTS.find((a) => a.id === w.accent) || {}).hex || globalHex }" />
+          <span class="wsd-dot" :style="{ background: isPro && w.accent ? accentHex(w.accent) : globalHex }" />
           <span class="wsd-item-name">{{ w.name }}</span>
           <Icon v-if="activeWs?.id === w.id" name="check" :size="14" />
         </button>

@@ -11,7 +11,9 @@
     "tabs",
     "favicon",
     "search",
-    "tabGroups"
+    "tabGroups",
+    "downloads",
+    "downloads.ui"
   ],
   "optional_host_permissions": [
     "<all_urls>"

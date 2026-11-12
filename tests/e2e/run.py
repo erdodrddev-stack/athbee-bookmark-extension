@@ -206,11 +206,75 @@ with sync_playwright() as p:
         shot('04b-upgrade')
         page.get_by_role('button', name='Agora não').click()
         page.wait_for_selector('.mt-tabs')
-        page.evaluate("() => chrome.storage.local.set({ license: { pro: true, source: 'dev', since: Date.now() } })")
-        page.wait_for_selector('.pro-lock', state='detached')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.mt-tabs', state='detached')
+
+    def upgrade_shown(why):
+        page.wait_for_selector('.pro-list')
+        reason = page.locator('.pro-why').inner_text()
+        expect(why in reason, f'expected "{why}" in the upgrade reason, got "{reason}"')
+        page.get_by_role('button', name='Agora não').click()
+        page.wait_for_selector('.pro-list', state='detached')
+
+    def open_settings(tab):
+        page.locator('.tree-row', has_text='Configurações').click()
+        page.locator('.st-tabs button', has_text=tab).click()
+
+    @step('free plan: paid settings, search and colors ask for Pro')
+    def _():
+        page.locator('.search-filter').click()
+        upgrade_shown('busca avançada')
+        expect(page.locator('.adv').count() == 0, 'advanced search opened on the free plan')
+        open_settings('Aparência')
+        page.locator('.st-panel .pv-opt', has_text='Brutal').click()
+        upgrade_shown('brutal')
+        page.wait_for_selector('.st-panel .pv-opt')  # back on the appearance tab
+        expect(page.evaluate("document.documentElement.dataset.look") == 'modern', 'paid look applied')
+        page.locator('.st-panel .pv-opt', has_text='Personalizada').click()
+        upgrade_shown('qualquer cor')
+        page.locator('.st-tabs button', has_text='Backup').click()
+        page.locator('.st-panel .switch').first.click()
+        upgrade_shown('Sincronizar')
+        page.locator('.st-panel .seg button', has_text='Diário').click()
+        upgrade_shown('backup automático')
+        expect(page.locator('.st-panel .seg button.on').inner_text().strip() == 'Desligado', 'auto backup turned on')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.st-panel', state='detached')
+
+    @step('free plan: 2 workspaces and 3 sessions at most')
+    def _():
+        page.evaluate("""async () => {
+          const { meta } = await chrome.storage.local.get('meta')
+          meta.workspaces = ['A', 'B'].map((name) => ({ id: 'w' + name, name, folders: [], accent: null, look: null }))
+          await chrome.storage.local.set({ meta })
+        }""")
+        page.wait_for_timeout(400)
+        page.locator('.ws-switch').click()
+        page.locator('.ctx-item', has_text='Novo workspace').click()
+        upgrade_shown('2 workspaces')
+        expect(page.locator('.wsd').count() == 0, 'workspace dialog opened past the limit')
+        page.evaluate("""async (site) => {
+          const now = Date.now()
+          const sessions = [1, 2, 3].map((i) => ({ id: 'x' + i, name: 'S' + i, createdAt: now - i, updatedAt: now - i, tabs: [{ url: site + '/s' + i, title: 'S' + i }] }))
+          await chrome.storage.local.set({ sessions })
+        }""", SITE)
+        page.get_by_text('Sessões', exact=True).first.click()
+        page.wait_for_selector('.sess-card')
+        page.locator('.sess-save .btn-primary').click()
+        upgrade_shown('3 sessões')
+        expect(page.locator('.sess-card').count() == 3, 'a 4th session was saved')
+        # clean up, then unlock Pro for the rest of the run
+        page.evaluate("""async () => {
+          const { meta } = await chrome.storage.local.get('meta')
+          meta.workspaces = []
+          await chrome.storage.local.set({ meta, sessions: [], license: { pro: true, source: 'dev', since: Date.now() } })
+        }""")
+        page.get_by_text('Início', exact=True).first.click()
+        page.wait_for_timeout(400)
 
     @step('maintenance: unused tab renders')
     def _():
+        page.locator('.sb-foot .tree-row', has_text='Manutenção').click()
         page.locator('.mt-tabs button', has_text='Parados').click()
         page.wait_for_selector('.stale-top')
         page.wait_for_timeout(800)
@@ -353,6 +417,64 @@ with sync_playwright() as p:
         page.locator('.theme-switch button, .theme-switch').last.click()
         page.wait_for_timeout(300)
         shot('12-dark-columns')
+
+    @step('pro: custom accent color')
+    def _():
+        css = lambda v: page.evaluate(f"getComputedStyle(document.documentElement).getPropertyValue('{v}').trim()")
+        open_settings('Aparência')
+        page.locator('.st-panel .pv-opt', has_text='Personalizada').click()
+        page.locator('.st-custom .tc-hex').fill('#123456')
+        page.wait_for_timeout(300)
+        expect(css('--accent') == '#123456', f"custom accent not applied: {css('--accent')}")
+        expect(css('--on-accent') == '#fffff0', f"dark custom accent should get light text: {css('--on-accent')}")
+        shot('13-custom-accent')
+        page.locator('.st-panel .pv-opt', has_text='Amarelo').click()
+        page.wait_for_timeout(200)
+        expect(css('--accent') == '#f6c324', f"preset not restored: {css('--accent')}")
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.st-panel', state='detached')
+
+    @step('pro: automatic backup saves a file')
+    def _():
+        open_settings('Backup')
+        page.locator('.st-panel .seg button', has_text='Diário').click()
+        page.wait_for_selector('.st-hint:has-text("Último em")', timeout=30000)
+        files = page.evaluate("async () => (await chrome.downloads.search({ filenameRegex: 'bookdeck-auto-', state: 'complete' })).map((d) => d.filename)")
+        expect(len(files) >= 1 and 'Bookdeck' in files[0], f'no backup file: {files}')
+        shot('14-auto-backup')
+
+    @step('pro: sync pushes, then applies a copy from another computer')
+    def _():
+        page.locator('.st-panel .switch').first.click()
+        page.wait_for_selector('.st-hint:has-text("Sincronizado em")', timeout=20000)
+        head = page.evaluate("async () => (await chrome.storage.sync.get('bdsync')).bdsync")
+        expect(bool(head and head['n'] >= 1), f'nothing pushed: {head}')
+        # play the other computer: add a tag to "Jira" in the shared copy
+        page.evaluate("""async (site) => {
+          const stable = (v) => Array.isArray(v) ? '[' + v.map(stable).join(',') + ']'
+            : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map((k) => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}'
+            : JSON.stringify(v)
+          const pipe = async (bytes, s) => new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(s)).arrayBuffer())
+          const { bdsync: head } = await chrome.storage.sync.get('bdsync')
+          const keys = Array.from({ length: head.n }, (_, i) => 'bdsync_' + i)
+          const parts = await chrome.storage.sync.get(keys)
+          const gz = Uint8Array.from(atob(keys.map((k) => parts[k]).join('')), (c) => c.charCodeAt(0))
+          const snap = JSON.parse(new TextDecoder().decode(await pipe(gz, new DecompressionStream('gzip'))))
+          snap.tags['u:' + site + '/jira'] = ['remoto']
+          const out = await pipe(new TextEncoder().encode(JSON.stringify(snap)), new CompressionStream('gzip'))
+          let b64 = ''; for (const c of out) b64 += String.fromCharCode(c); b64 = btoa(b64)
+          const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(stable(snap))))
+          const hash = [...digest.slice(0, 12)].map((b) => b.toString(16).padStart(2, '0')).join('')
+          await chrome.storage.sync.set({ bdsync: { hash, n: 1, at: Date.now() }, bdsync_0: b64 })
+        }""", SITE)
+        tagged = "async () => { const [b] = await chrome.bookmarks.search({ title: 'Jira' }); const { meta } = await chrome.storage.local.get('meta'); return meta.tags[b.id] || [] }"
+        for _ in range(30):
+            if 'remoto' in page.evaluate(tagged): break
+            page.wait_for_timeout(300)
+        expect('remoto' in page.evaluate(tagged), f'remote tag not applied: {page.evaluate(tagged)}')
+        shot('15-sync')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.st-panel', state='detached')
 
     @step("what's new after updating from 0.1")
     def _():
