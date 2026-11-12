@@ -11,6 +11,7 @@ To work, the extension reads and changes data **inside your browser only**:
 - **Bookmarks**: to show, search, organize, move and delete them.
 - **Browsing history**: to suggest the bookmarks and pages you use most, include history in search results, and find bookmarks you haven't opened in a long time. Bookdeck keeps the date of the last visit of each *bookmarked* page so this keeps working beyond the browser's own history window. It does not keep any other history.
 - **Open tabs and tab groups**: only when you open bookmarks, save the current page from the toolbar button, or save and reopen a session.
+- **Web search**: when you choose “Search the web” in the search box, the text you typed is sent to your browser's default search engine, just like a regular search. Bookdeck doesn't send it anywhere else.
 - **Website access (optional)**: only if you start a broken-link check and allow it. Bookdeck then makes one request to each bookmarked address to see whether it still works. Requests are sent without cookies, and only the HTTP status and final address are read. Nothing is sent to anyone other than the sites you bookmarked.
 
 ## Where your data is stored
@@ -52,6 +53,7 @@ Para funcionar, a extensão lê e altera dados **somente dentro do seu navegador
 - **Favoritos**: para mostrar, buscar, organizar, mover e excluir.
 - **Histórico**: para sugerir os favoritos e páginas que você mais usa, incluir o histórico na busca e encontrar favoritos que você não abre há muito tempo. O Bookdeck guarda a data da última visita de cada página *que está nos favoritos*, para isso continuar funcionando além do período que o navegador guarda. Nenhum outro histórico é guardado.
 - **Abas e grupos de abas**: só quando você abre favoritos, salva a página atual pelo botão da barra ou salva e reabre uma sessão.
+- **Pesquisa na web**: quando você escolhe “Pesquisar na web” na caixa de busca, o texto digitado vai para o mecanismo de busca padrão do seu navegador, como numa busca normal. O Bookdeck não o envia para nenhum outro lugar.
 - **Acesso a sites (opcional)**: só se você iniciar uma verificação de links quebrados e permitir. O Bookdeck faz uma requisição a cada endereço salvo para ver se ainda funciona, sem enviar cookies, lendo apenas o código HTTP e o endereço final. Nada é enviado a ninguém além dos próprios sites que você salvou.
 
 ## Onde seus dados ficam
