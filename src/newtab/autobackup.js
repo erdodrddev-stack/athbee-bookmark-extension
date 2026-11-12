@@ -1,7 +1,7 @@
 /**
- * Automatic backups (Bookdeck Pro): when a new tab opens and the last one is older than
- * a day or a week, a backup file goes to Downloads/Bookdeck/, keeping only the newest N.
- * Bookdeck is the new tab page, so it opens often enough without a background worker.
+ * Automatic backups (Athbee Bookmark Pro): when a new tab opens and the last one is older than
+ * a day or a week, a backup file goes to Downloads/Athbee Bookmark/, keeping only the newest N.
+ * Athbee Bookmark is the new tab page, so it opens often enough without a background worker.
  */
 import { reactive } from 'vue'
 import { settings } from '../shared/settings'
@@ -11,8 +11,8 @@ import { isExt } from '../shared/util'
 
 const KEY = 'autoBackupState'
 const EVERY = { daily: 86400e3, weekly: 7 * 86400e3 }
-const FOLDER = 'Bookdeck'
-const FILE_RE = '(^|[\\\\/])bookdeck-auto-[^\\\\/]*\\.json$'
+const FOLDER = 'Athbee Bookmark'
+const FILE_RE = '(^|[\\\\/])athbee-bookmark-auto-[^\\\\/]*\\.json$'
 
 /** { lastRun: ms, downloadId, error: i18n key | null } */
 export const autoBackup = reactive({ lastRun: 0, downloadId: null, error: null, running: false })
@@ -65,7 +65,7 @@ export async function runAutoBackup() {
     await chrome.downloads.setUiOptions?.({ enabled: false }).catch(() => {})
     const id = await chrome.downloads.download({
       url,
-      filename: `${FOLDER}/bookdeck-auto-${stamp(new Date())}.json`,
+      filename: `${FOLDER}/athbee-bookmark-auto-${stamp(new Date())}.json`,
       conflictAction: 'uniquify',
       saveAs: false,
     })
@@ -90,7 +90,7 @@ export async function maybeAutoBackup() {
   await load()
   const every = EVERY[settings.autoBackup]
   if (!license.pro || !every) return
-  await navigator.locks.request('bookdeck-auto-backup', { ifAvailable: true }, async (lock) => {
+  await navigator.locks.request('athbee-bookmark-backup-lock', { ifAvailable: true }, async (lock) => {
     if (!lock) return
     await load() // another page may have just done it
     if (Date.now() - autoBackup.lastRun >= every) await runAutoBackup()

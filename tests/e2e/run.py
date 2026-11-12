@@ -6,7 +6,7 @@ Chromium-based browser, headless, and drives every feature through the UI.
 
 Needs Python with Playwright (see tests/e2e/README.md) and a Chromium-based
 browser that still accepts --load-extension (Brave, Edge, Chromium, Chrome for
-Testing; branded Google Chrome 137+ does not). Set BOOKDECK_BROWSER to pick
+Testing; branded Google Chrome 137+ does not). Set ATHBEE_BROWSER to pick
 one. Screenshots and the downloaded backup land in tests/e2e/.tmp/out/.
 """
 import hashlib, http.server, json, os, shutil, sys, threading
@@ -19,9 +19,9 @@ CANDIDATES = [
     '/usr/bin/chromium-browser', '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
     '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
 ]
-EXE = os.environ.get('BOOKDECK_BROWSER') or next((c for c in CANDIDATES if os.path.exists(c)), None)
+EXE = os.environ.get('ATHBEE_BROWSER') or next((c for c in CANDIDATES if os.path.exists(c)), None)
 if not EXE:
-    sys.exit('No browser found: set BOOKDECK_BROWSER to a Chromium-based browser executable.')
+    sys.exit('No browser found: set ATHBEE_BROWSER to a Chromium-based browser executable.')
 if not os.path.exists(os.path.join(SRC_DIST, 'manifest.json')):
     sys.exit('dist/ is missing: run "npm run build" first.')
 
@@ -105,7 +105,7 @@ with sync_playwright() as p:
         shot('00-welcome')
         for _ in range(3):
             page.get_by_role('button', name='Próximo').click()
-        expect('navegador' in page.locator('.wl-h').inner_text().lower(), 'last step not reached')
+        expect(page.get_by_role('button', name='Vamos lá').count() == 1, 'last step not reached')
         page.get_by_role('button', name='Vamos lá').click()
         page.wait_for_selector('.wl', state='detached')
         page.reload(); page.wait_for_selector('.brand'); page.wait_for_timeout(800)
@@ -164,7 +164,7 @@ with sync_playwright() as p:
         path = os.path.join(OUT, 'backup.json')
         dl.value.save_as(path)
         data = json.load(open(path))
-        expect(data['app'] == 'bookdeck' and len(data['roots']) >= 2, 'bad backup content')
+        expect(data['app'] == 'athbee-bookmark' and len(data['roots']) >= 2, 'bad backup content')
         global BACKUP
         BACKUP = path
 
@@ -435,6 +435,15 @@ with sync_playwright() as p:
         page.locator('.st-panel .pv-opt', has_text='Amarelo').click()
         page.wait_for_timeout(200)
         expect(css('--accent') == '#f6c324', f"preset not restored: {css('--accent')}")
+        # the long name stays inside the sidebar in the widest look
+        page.locator('.st-panel .pv-opt', has_text='Brutal').click()
+        page.wait_for_timeout(300)
+        box = page.evaluate("(() => { const b = document.querySelector('.brand').getBoundingClientRect(), h = document.querySelector('.sb-head').getBoundingClientRect(); return [b.right, h.right] })()")
+        expect(box[0] <= box[1], f'brand overflows the sidebar: {box}')
+        page.keyboard.press('Escape')
+        shot('13b-brutal-brand')
+        open_settings('Aparência')
+        page.locator('.st-panel .pv-opt', has_text='Moderno').click()
         page.keyboard.press('Escape')
         page.wait_for_selector('.st-panel', state='detached')
 
@@ -443,7 +452,7 @@ with sync_playwright() as p:
         open_settings('Backup')
         page.locator('.st-panel .seg button', has_text='Diário').click()
         page.wait_for_selector('.st-hint:has-text("Último em")', timeout=30000)
-        # Playwright saves downloads under its own random names, so find it by the id Bookdeck kept
+        # Playwright saves downloads under its own random names, so find it by the id Athbee Bookmark kept
         d = page.evaluate("""async () => {
           const { autoBackupState: s } = await chrome.storage.local.get('autoBackupState')
           const [d] = await chrome.downloads.search({ id: s.downloadId })
@@ -451,7 +460,7 @@ with sync_playwright() as p:
         }""")
         expect(bool(d) and d['state'] == 'complete', f'backup download not complete: {d}')
         data = json.load(open(d['filename']))
-        expect(data.get('app') == 'bookdeck' and data.get('roots'), 'backup file is not a Bookdeck backup')
+        expect(data.get('app') == 'athbee-bookmark' and data.get('roots'), 'backup file is not a Athbee Bookmark backup')
         shot('14-auto-backup')
 
     @step('pro: sync pushes, then applies a copy from another computer')
@@ -486,6 +495,14 @@ with sync_playwright() as p:
         shot('15-sync')
         page.keyboard.press('Escape')
         page.wait_for_selector('.st-panel', state='detached')
+
+    @step('pro: license check goes through the service worker')
+    def _():
+        r = page.evaluate("() => chrome.runtime.sendMessage({ type: 'pro:check' })")
+        expect(bool(r and r.get('ok')), f'no answer from the service worker: {r}')
+        # nothing was bought on extensionpay.com, and the test Pro switch is left alone
+        lic = page.evaluate("async () => (await chrome.storage.local.get('license')).license")
+        expect(lic['pro'] and lic['source'] == 'dev' and lic.get('checkedAt'), f'license changed: {lic}')
 
     @step("what's new after updating from 0.1")
     def _():

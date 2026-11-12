@@ -1,7 +1,7 @@
 /**
  * When each bookmarked page was last visited.
  *
- * The browser only keeps a few months of history, so Bookdeck copies the last
+ * The browser only keeps a few months of history, so Athbee Bookmark copies the last
  * visit of every bookmarked URL into its own storage. Over time this lets it
  * tell a bookmark unused for a year apart from one unused for three months.
  */

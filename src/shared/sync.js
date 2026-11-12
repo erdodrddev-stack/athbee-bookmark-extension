@@ -1,5 +1,5 @@
 /**
- * Sync (Bookdeck Pro): tags, pinned/hidden items, tag colors, workspaces, sessions and
+ * Sync (Athbee Bookmark Pro): tags, pinned/hidden items, tag colors, workspaces, sessions and
  * settings travel between computers through chrome.storage.sync, i.e. the user's own
  * Google account. Bookmarks themselves are synced by the browser.
  *
@@ -299,10 +299,10 @@ async function reconcileNow() {
   }
 }
 
-/** One round at a time, across every open Bookdeck page. */
+/** One round at a time, across every open Athbee Bookmark page. */
 export function reconcile() {
   if (!isExt) return Promise.resolve()
-  return navigator.locks.request('bookdeck-sync', reconcileNow)
+  return navigator.locks.request('athbee-bookmark-sync', reconcileNow)
 }
 
 let timer

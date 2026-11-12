@@ -10,14 +10,14 @@ also live in `public/_locales/*/messages.json` (max. 132 characters).
 
 ## Português (Brasil)
 
-**Nome:** Bookdeck
+**Nome:** Athbee Bookmark
 
 **Descrição curta (132):**
-Nova guia para seus favoritos: tags, workspaces, sessões de abas, links quebrados e duplicados. Seus favoritos não saem do navegador.
+Nova guia para seus favoritos: tags, workspaces, sessões de abas, links quebrados e duplicados. Nada disso sai do seu navegador.
 
 **Descrição detalhada:**
 
-Bookdeck transforma a nova guia num painel dos seus favoritos. Tudo o que você salvou fica à mão, organizado do seu jeito, sem criar conta e sem servidor guardando seus favoritos.
+Athbee Bookmark transforma a nova guia num painel dos seus favoritos. Tudo o que você salvou fica à mão, organizado do seu jeito, sem criar conta e sem servidor guardando seus favoritos.
 
 ★ ORGANIZE
 • Pastas em grade ou em colunas, em cartões, compacto ou só ícones
@@ -37,7 +37,7 @@ Bookdeck transforma a nova guia num painel dos seus favoritos. Tudo o que você 
 ★ BOOKDECK PRO: US$ 12, PAGAMENTO ÚNICO
 Tudo acima é grátis, sem prazo. O Pro libera, para sempre:
 • Sincronização de tags, workspaces, sessões e configurações entre computadores, pela sua conta Google
-• Backup automático diário ou semanal na pasta Downloads/Bookdeck
+• Backup automático diário ou semanal na pasta Downloads/Athbee Bookmark
 • Workspaces e sessões ilimitados (o grátis tem 2 workspaces e 3 sessões)
 • Cor e visual próprios para cada workspace
 • Visuais brutal e cyberpunk e cor de destaque personalizada
@@ -52,18 +52,20 @@ Tudo acima é grátis, sem prazo. O Pro libera, para sempre:
 
 Visual moderno, tema claro e escuro, cinco cores de destaque. Funciona no Chrome, Brave e Edge.
 
+Código aberto (AGPL-3.0): https://github.com/erdodrddev-stack/athbee-bookmark-extension
+
 ---
 
 ## English
 
-**Name:** Bookdeck
+**Name:** Athbee Bookmark
 
 **Short description (132):**
 A new tab for your bookmarks: tags, workspaces, tab sessions, broken links and duplicates. Your bookmarks never leave your browser.
 
 **Detailed description:**
 
-Bookdeck turns the new tab into a dashboard for your bookmarks. Everything you saved is at hand, organized your way, with no sign-up and no server holding your bookmarks.
+Athbee Bookmark turns the new tab into a dashboard for your bookmarks. Everything you saved is at hand, organized your way, with no sign-up and no server holding your bookmarks.
 
 ★ ORGANIZE
 • Folders in a grid or in columns, as cards, compact rows or icons only
@@ -83,7 +85,7 @@ Bookdeck turns the new tab into a dashboard for your bookmarks. Everything you s
 ★ BOOKDECK PRO: US$ 12, ONE-TIME PAYMENT
 Everything above is free, with no time limit. Pro unlocks, for good:
 • Sync tags, workspaces, sessions and settings across computers through your Google account
-• Daily or weekly automatic backups to Downloads/Bookdeck
+• Daily or weekly automatic backups to Downloads/Athbee Bookmark
 • Unlimited workspaces and sessions (the free plan has 2 workspaces and 3 sessions)
 • A color and look of its own for each workspace
 • Brutal and cyberpunk looks and a custom accent color
@@ -98,6 +100,8 @@ Everything above is free, with no time limit. Pro unlocks, for good:
 
 Modern look, light and dark themes, five accent colors. Works in Chrome, Brave and Edge.
 
+Open source (AGPL-3.0): https://github.com/erdodrddev-stack/athbee-bookmark-extension
+
 ---
 
 ## Privacy practices tab
@@ -110,7 +114,7 @@ Modern look, light and dark themes, five accent colors. Works in Chrome, Brave a
 |---|---|
 | `bookmarks` | Show, create, edit, move and delete the user's bookmarks: the core of the extension. |
 | `storage` | Save settings, tags, pinned/hidden items, workspaces, sessions, last-visit dates and the Pro license status locally; with Pro sync turned on, also in `storage.sync` (the user's own browser sync account). |
-| `downloads` | Pro automatic backups: save a backup file to Downloads/Bookdeck without a prompt, and delete the oldest ones beyond the number the user chose. |
+| `downloads` | Pro automatic backups: save a backup file to Downloads/Athbee Bookmark without a prompt, and delete the oldest ones beyond the number the user chose. |
 | `downloads.ui` | Hide the download bubble while an automatic backup is saved in the background. |
 | `history` | Suggest frequently used bookmarks and pages, search history from the search box, and tell which bookmarks haven't been opened in months. Read locally only. |
 | `tabs` | Open bookmarks in new tabs/windows, read the current tab in the popup to save it, and save/restore the tabs of a window as a session. |
@@ -118,18 +122,19 @@ Modern look, light and dark themes, five accent colors. Works in Chrome, Brave a
 | `favicon` | Show each bookmark's site icon from the browser's own favicon cache. |
 | `search` | “Search the web” from the search box using the user's default search engine. |
 | Optional host access (`<all_urls>`) | Requested only when the user starts a broken-link check: one request per bookmarked URL to read its HTTP status. Without it nothing is fetched. |
-| Host access `https://extensionpay.com/*` | Bookdeck Pro: open the payment page and check whether the user has paid. Only a random install identifier is sent; no browsing data. _(Added to the manifest together with the ExtensionPay integration.)_ |
+| Content script on `https://extensionpay.com/*` | Athbee Bookmark Pro (ExtensionPay): on the payment page only, tells the extension that a payment just went through so Pro unlocks right away. It runs on no other site and reads nothing else. |
+| Background service worker | Athbee Bookmark Pro: opens the ExtensionPay payment/restore pages and checks whether this install has paid. Nothing is sent before the user opens one of those pages. |
 
 **Remote code:** No. All code is bundled in the package.
 
-**Data usage:** Bookmarks, history, tabs and settings are never collected or transmitted. The only data that leaves the browser belongs to a Bookdeck Pro purchase, handled by ExtensionPay/Stripe. Check:
+**Data usage:** Bookmarks, history, tabs and settings are never collected or transmitted. The only data that leaves the browser belongs to a Athbee Bookmark Pro purchase, handled by ExtensionPay/Stripe. Check:
 
 - **Personally identifiable information**: the email the user enters when buying Pro (kept by ExtensionPay to restore the license).
-- **Financial and payment information**: card details entered on the Stripe checkout page (Bookdeck never receives them).
+- **Financial and payment information**: card details entered on the Stripe checkout page (Athbee Bookmark never receives them).
 
 Leave every other box unchecked; certify that data is not sold, not used for unrelated purposes and not used for creditworthiness.
 
-**Pricing / in-app purchases:** the extension is free to install, with an optional one-time in-app purchase (Bookdeck Pro, US$ 12). Mention it in the description, as above.
+**Pricing / in-app purchases:** the extension is free to install, with an optional one-time in-app purchase (Athbee Bookmark Pro, US$ 12). Mention it in the description, as above.
 
 **Privacy policy URL:** host `docs/privacy-policy.html` (standalone page) anywhere public and paste its URL.
 

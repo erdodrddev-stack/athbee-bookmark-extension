@@ -98,7 +98,7 @@ function openApp() {
     <header class="pp-head">
       <button class="pp-brand" :title="t('openApp')" @click="openApp">
         <Logo :size="24" />
-        <span>Bookdeck</span>
+        <span>Athbee Bookmark</span>
         <Icon name="chevron-right" :size="16" class="pp-chev" />
       </button>
       <button class="icon-btn" :title="t('copyUrl')" :disabled="!url" @click="copy">

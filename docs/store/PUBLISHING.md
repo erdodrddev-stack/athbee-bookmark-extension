@@ -12,7 +12,7 @@ or a decision.
       can't click.
 - [ ] **(you)** Quick look at the welcome tour in a fresh profile and at the update notice
       (it shows for people coming from 0.1)
-- [ ] `npm run package` → `bookdeck-0.2.0.zip`
+- [ ] `npm run package` → `athbee-bookmark-0.3.0.zip`
 
 ## 2. Privacy policy URL **(you)**
 
@@ -33,7 +33,7 @@ Then update the contact line in `docs/privacy-policy.md` / `.html` (it currently
 
 ## 4. New item in the Developer Dashboard
 
-1. **Upload** `bookdeck-0.2.0.zip`
+1. **Upload** `athbee-bookmark-0.3.0.zip`
 2. **Store listing** (texts in `docs/store/listing.md`):
    - Description: English and Português (Brasil)
    - Category: Productivity

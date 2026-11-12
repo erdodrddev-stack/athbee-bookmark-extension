@@ -15,8 +15,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'docs', 'store', 'images')
 TMP = os.path.join(ROOT, 'scripts', '.tmp-store')
 CANDIDATES = ['/opt/brave.com/brave/brave', '/usr/bin/brave-browser', '/usr/bin/microsoft-edge', '/usr/bin/chromium', '/usr/bin/chromium-browser']
-EXE = os.environ.get('BOOKDECK_BROWSER') or next((c for c in CANDIDATES if os.path.exists(c)), None)
-if not EXE: sys.exit('No browser found: set BOOKDECK_BROWSER.')
+EXE = os.environ.get('ATHBEE_BROWSER') or next((c for c in CANDIDATES if os.path.exists(c)), None)
+if not EXE: sys.exit('No browser found: set ATHBEE_BROWSER.')
 
 # copy of the build with site access pre-granted, so the link check can run headless
 shutil.rmtree(TMP, ignore_errors=True)
@@ -58,7 +58,7 @@ def seed_js(t):
   for (const [title, url] of [['Spotify', 'https://open.spotify.com/'], ['Netflix', 'https://www.netflix.com/'], ['Airbnb', 'https://www.airbnb.com/'], [t.maps, 'https://www.google.com/maps'], ['Amazon', 'https://www.amazon.com/']])
     ids[title] = (await mk(personal.id, title, url)).id
   const later = await mk(other, t.later); ids.later = later.id
-  for (const [title, url] of [['The Verge', 'https://www.theverge.com/'], ['Smashing Magazine', 'https://www.smashingmagazine.com/'], ['CSS-Tricks', 'https://css-tricks.com/'], ['GitHub', 'https://www.github.com/?utm_source=newsletter'], [t.old, 'https://github.com/bookdeck-demo/this-page-does-not-exist'], ['Firefox', 'http://www.mozilla.org/firefox/new/'], ['Twitter', 'http://twitter.com/']])
+  for (const [title, url] of [['The Verge', 'https://www.theverge.com/'], ['Smashing Magazine', 'https://www.smashingmagazine.com/'], ['CSS-Tricks', 'https://css-tricks.com/'], ['GitHub', 'https://www.github.com/?utm_source=newsletter'], [t.old, 'https://github.com/athbee-bookmark-demo/this-page-does-not-exist'], ['Firefox', 'http://www.mozilla.org/firefox/new/'], ['Twitter', 'http://twitter.com/']])
     ids['later:' + title] = (await mk(later.id, title, url)).id
   return ids
 }"""
@@ -76,7 +76,7 @@ def setup(page, lang, ids):
     work = [{'id': 'wwork', 'name': t['ws_work'], 'folders': [ids['work']], 'accent': 'blue', 'look': 'modern'},
             {'id': 'wlife', 'name': t['ws_life'], 'folders': [ids['personal'], ids['study']], 'accent': 'green', 'look': None}]
     meta = {'pinned': [ids['Gmail'], ids[t['cal']], ids['Notion'], ids['docs']], 'hidden': [], 'tags': tags, 'tagColors': colors,
-            'workspaces': work, 'activeWs': None, 'seenVersion': '0.2.0', 'historyOpen': False, 'expanded': {'1': True, ids['work']: True}}
+            'workspaces': work, 'activeWs': None, 'seenVersion': m['version'], 'historyOpen': False, 'expanded': {'1': True, ids['work']: True}}
     settings = {'lang': lang, 'theme': 'light', 'look': 'modern', 'accent': 'yellow', 'style': 'card', 'layout': 'grid', 'width': 230}
     now = int(time.time() * 1000)
     g = lambda title, color: {'title': title, 'color': color}
@@ -192,16 +192,16 @@ def promo(p):
       .card{{border:4px solid #191919;background:#fffff0;box-shadow:10px 10px 0 #191919;padding:var(--pad)}}"""
     browser = p.chromium.launch(executable_path=EXE, headless=True)
     for name, w, h, vars_, tag in [
-        ('promo-small-440x280', 440, 280, '--g:14px;--t:31px;--s:12px;--pad:18px', 'Favoritos, workspaces<br>e sessões'),
-        ('promo-small-440x280-en', 440, 280, '--g:14px;--t:31px;--s:12px;--pad:18px', 'Bookmarks, workspaces<br>and sessions'),
-        ('marquee-1400x560', 1400, 560, '--g:44px;--t:118px;--s:34px;--pad:52px', 'Seus favoritos, organizados.<br>Nada sai do navegador.'),
-        ('marquee-1400x560-en', 1400, 560, '--g:44px;--t:118px;--s:34px;--pad:52px', 'Your bookmarks, organized.<br>Nothing leaves your browser.'),
+        ('promo-small-440x280', 440, 280, '--g:14px;--t:30px;--s:12px;--pad:18px', 'Favoritos, workspaces<br>e sessões'),
+        ('promo-small-440x280-en', 440, 280, '--g:14px;--t:30px;--s:12px;--pad:18px', 'Bookmarks, workspaces<br>and sessions'),
+        ('marquee-1400x560', 1400, 560, '--g:44px;--t:100px;--s:30px;--pad:48px', 'Seus favoritos, organizados.<br>Nada sai do navegador.'),
+        ('marquee-1400x560-en', 1400, 560, '--g:44px;--t:100px;--s:30px;--pad:48px', 'Your bookmarks, organized.<br>Nothing leaves your browser.'),
     ]:
         pg = browser.new_page(viewport={'width': w, 'height': h})
         size = 78 if w < 600 else 220
         # a file:// page, so the file:// fonts are allowed to load
         html = os.path.join(TMP, name + '.html')
-        open(html, 'w').write(f'<!doctype html><meta charset="utf-8"><style>{css}</style><body style="{vars_}"><div class="card box">{logo.format(s=size)}<div><h1>Bookdeck</h1><p>{tag}</p></div></div></body>')
+        open(html, 'w').write(f'<!doctype html><meta charset="utf-8"><style>{css}</style><body style="{vars_}"><div class="card box">{logo.format(s=size)}<div><h1>Athbee<br>Bookmark</h1><p>{tag}</p></div></div></body>')
         pg.goto('file://' + html)
         pg.evaluate('document.fonts.ready')
         pg.wait_for_timeout(300)
@@ -211,8 +211,10 @@ def promo(p):
 
 with sync_playwright() as p:
     os.makedirs(OUT, exist_ok=True)
-    for lang in ('pt', 'en'):
-        print('screenshots:', lang); run_lang(p, lang)
+    # PROMO_ONLY=1 redraws just the promo tiles (no internet needed)
+    if not os.environ.get('PROMO_ONLY'):
+        for lang in ('pt', 'en'):
+            print('screenshots:', lang); run_lang(p, lang)
     print('promo tiles'); promo(p)
 shutil.rmtree(TMP, ignore_errors=True)
 print('done:', OUT)

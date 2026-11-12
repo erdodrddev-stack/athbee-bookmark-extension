@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_appName__",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
   "permissions": [
@@ -36,5 +36,20 @@
     "32": "icons/icon-32.png",
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
-  }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://extensionpay.com/*"
+      ],
+      "js": [
+        "extpay-content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
 }

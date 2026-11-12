@@ -1,6 +1,6 @@
 /**
  * Tab sessions: a window's tabs saved under a name, to reopen later.
- * Stored in chrome.storage.local and kept in sync across open Bookdeck pages.
+ * Stored in chrome.storage.local and kept in sync across open Athbee Bookmark pages.
  */
 import { shallowRef } from 'vue'
 import { isExt, hostOf } from './util'

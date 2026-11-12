@@ -1,5 +1,5 @@
 /**
- * Backup file: the bookmark tree with Bookdeck's own data (tags, pinned, hidden)
+ * Backup file: the bookmark tree with Athbee Bookmark's own data (tags, pinned, hidden)
  * attached to each node, plus tag colors and settings.
  *
  * Bookmark ids are local to one browser profile, so nothing in the file refers
@@ -13,7 +13,9 @@ import { refreshUsage, mergeUsage } from './usage'
 import { sessions, loadSessions, importSessions } from './sessions'
 import { exportWorkspaces, importWorkspaces } from './workspaces'
 
-export const BACKUP_APP = 'bookdeck'
+export const BACKUP_APP = 'athbee-bookmark'
+/** Backups made before the rename still import. */
+const LEGACY_APPS = ['bookdeck']
 export const BACKUP_VERSION = 1
 
 function nodeMeta(id) {
@@ -59,7 +61,7 @@ export async function downloadBackup() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
-  a.download = `bookdeck-backup-${data.exportedAt.slice(0, 10)}.json`
+  a.download = `athbee-bookmark-backup-${data.exportedAt.slice(0, 10)}.json`
   document.body.append(a)
   a.click()
   a.remove()
@@ -96,7 +98,7 @@ export function parseBackup(text) {
   } catch {
     throw Object.assign(new Error('not json'), { code: 'invalid' })
   }
-  if (!data || data.app !== BACKUP_APP || !Array.isArray(data.roots)) {
+  if (!data || ![BACKUP_APP, ...LEGACY_APPS].includes(data.app) || !Array.isArray(data.roots)) {
     throw Object.assign(new Error('not a backup'), { code: 'invalid' })
   }
   if (data.version > BACKUP_VERSION) throw Object.assign(new Error('newer version'), { code: 'newer' })

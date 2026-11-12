@@ -21,6 +21,7 @@ import SelectionBar from './components/SelectionBar.vue'
 import { sel, clearSelection } from './selection'
 import { inWorkspace, switchByIndex, pruneWorkspaces } from '../shared/workspaces'
 import { startSync } from '../shared/sync'
+import { refreshLicense } from '../shared/premium'
 import { maybeAutoBackup } from './autobackup'
 
 const ready = ref(false)
@@ -38,6 +39,7 @@ onMounted(async () => {
   loadHistory()
   // keep last-visit dates growing past the browser's history window (throttled inside)
   setTimeout(() => refreshUsage().catch(() => {}), 3000)
+  refreshLicense()
   startSync().catch(() => {})
   setTimeout(() => maybeAutoBackup().catch(() => {}), 5000)
 })

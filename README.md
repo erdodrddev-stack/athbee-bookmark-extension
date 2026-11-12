@@ -1,4 +1,4 @@
-# Bookdeck
+# Athbee Bookmark
 
 Nova guia para acessar e organizar favoritos (Chrome/Brave, Manifest V3). Vue 3 + Vite.
 
@@ -28,7 +28,7 @@ Se outra extensão também substituir a nova guia (ex.: Markoob), desative-a enq
 
 ### Grátis × Pro (US$ 12, pagamento único)
 
-O plano grátis tem até 2 workspaces, 3 sessões e o visual moderno. O **Pro** libera sincronização entre computadores (pela conta Google, via `chrome.storage.sync`), backup automático em Downloads/Bookdeck, workspaces e sessões ilimitados, cor de destaque personalizada, cor/visual por workspace, os visuais brutal e cyberpunk, busca avançada por tags, favoritos parados, verificação de links da biblioteca inteira e correção em lote. Limites e licença: `src/shared/premium.js`. Em instalações sem compactação, o diálogo do Pro tem o botão **Ativar Pro (teste)**.
+O plano grátis tem até 2 workspaces, 3 sessões e o visual moderno. O **Pro** libera sincronização entre computadores (pela conta Google, via `chrome.storage.sync`), backup automático em Downloads/Athbee Bookmark, workspaces e sessões ilimitados, cor de destaque personalizada, cor/visual por workspace, os visuais brutal e cyberpunk, busca avançada por tags, favoritos parados, verificação de links da biblioteca inteira e correção em lote. Limites e licença: `src/shared/premium.js`. Em instalações sem compactação, o diálogo do Pro tem o botão **Ativar Pro (teste)**.
 
 ## Testes
 
@@ -42,10 +42,14 @@ Teste de ponta a ponta num navegador real (headless). Detalhes em `tests/e2e/REA
 ## Publicar
 
 ```bash
-npm run package      # gera bookdeck-<versão>.zip para a Chrome Web Store
+npm run package      # gera athbee-bookmark-<versão>.zip para a Chrome Web Store
 ```
 
 Passo a passo: `docs/store/PUBLISHING.md`. Textos da loja e permissões: `docs/store/listing.md`. Imagens: `npm run store:assets` (gera `docs/store/images/`). Política de privacidade: `docs/privacy-policy.html`.
+
+## Licença
+
+Código aberto sob a [GNU AGPL-3.0](LICENSE) (a biblioteca de pagamentos ExtPay.js usa a mesma licença). Código-fonte: https://github.com/erdodrddev-stack/athbee-bookmark-extension
 
 ## Estrutura
 

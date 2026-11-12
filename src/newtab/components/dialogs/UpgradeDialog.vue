@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import Modal from '../../../components/Modal.vue'
 import Icon from '../../../components/Icon.vue'
 import { t } from '../../../shared/i18n'
-import { isPro, LIMITS, PRO_FEATURES, devInstall, checkout, setDevPro } from '../../../shared/premium'
+import { isPro, license, LIMITS, PRO_FEATURES, devInstall, checkout, setDevPro } from '../../../shared/premium'
 import { ui, toast } from '../../ui'
 
 const props = defineProps({
@@ -31,6 +31,14 @@ async function buy() {
   }
 }
 
+async function restore() {
+  try {
+    await checkout.login()
+  } catch {
+    toast(t('proCheckoutFailed'))
+  }
+}
+
 async function devToggle() {
   await setDevPro(!isPro.value)
   toast(isPro.value ? t('proDevOn') : t('proDevOff'))
@@ -53,15 +61,19 @@ async function devToggle() {
         </li>
       </ul>
       <p class="st-hint">{{ t('proPrivacy') }}</p>
+      <p v-if="!isPro && checkout" class="st-hint">
+        {{ t('proRestoreQ') }} <button class="link-btn" @click="restore">{{ t('proRestore') }}</button>
+      </p>
+      <p v-else-if="license.source === 'extpay' && license.email" class="st-hint">{{ t('proBoughtWith', { email: license.email }) }}</p>
     </div>
 
     <template #footer>
-      <button v-if="devInstall" class="btn btn-ghost pro-btn pro-dev" :title="t('proDevHint')" @click="devToggle">
+      <button v-if="devInstall && license.source !== 'extpay'" class="btn btn-ghost pro-btn pro-dev" :title="t('proDevHint')" @click="devToggle">
         {{ isPro ? t('proDevDisable') : t('proDevEnable') }}
       </button>
       <button class="btn btn-ghost pro-btn" @click="close">{{ isPro ? t('close') : t('proNotNow') }}</button>
       <button v-if="!isPro" class="btn btn-primary pro-btn" :disabled="!checkout || busy" @click="buy">
-        {{ checkout ? t('proBuy') : t('proSoon') }}
+        {{ busy ? t('proOpening') : checkout ? t('proBuy') : t('proSoon') }}
       </button>
     </template>
   </Modal>

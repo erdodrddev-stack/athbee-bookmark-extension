@@ -19,10 +19,13 @@
   border-bottom: var(--bw) solid var(--line);
 }
 .brand {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 10px; min-width: 0;
   font-family: var(--font-display); font-size: 18px; font-weight: 400;
   text-transform: uppercase;
 }
+/* "Athbee Bookmark" wraps onto two lines when the sidebar (or the look's font) is too wide for one */
+.brand span { min-width: 0; line-height: 1.05; }
+.brand > :first-child { flex: none; }
 .sb-nav { flex: 1; overflow-y: auto; padding: 4px 10px 16px; }
 .sb-label {
   padding: 20px 8px 8px;
@@ -766,7 +769,7 @@ html.dark .tag-dot { background: var(--tag-bg, hsl(var(--h), 70%, 78%)); }
 html.dark .tag-ico { background: var(--tag-bg, hsl(var(--h), 70%, 78%)); }
 
 
-/* ----- Bookdeck Pro ----- */
+/* ----- Athbee Bookmark Pro ----- */
 .pro-badge {
   display: inline-block; margin-left: 4px; padding: 1px 4px; vertical-align: middle;
   font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.06em; line-height: 1.3;

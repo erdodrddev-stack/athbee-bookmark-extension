@@ -81,7 +81,7 @@ function startResize(e) {
     <div class="sb-head">
       <div class="brand">
         <Logo :size="26" />
-        <span>Bookdeck</span>
+        <span>Athbee Bookmark</span>
       </div>
       <button class="icon-btn" :title="t('collapse')" @click="settings.sidebarCollapsed = true">
         <Icon name="sidebar" :size="17" />

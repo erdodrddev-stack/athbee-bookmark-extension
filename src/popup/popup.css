@@ -12,11 +12,13 @@ html, body { width: 320px; }
 .pp-head .icon-btn { color: var(--on-accent); }
 .pp-head .icon-btn:hover { background: var(--on-accent-hover); }
 .pp-brand {
-  display: flex; align-items: center; gap: 9px;
+  display: flex; align-items: center; gap: 9px; min-width: 0; text-align: left;
   padding: 2px 4px;
   font-family: var(--font-display); font-size: 18px; font-weight: 400;
   text-transform: uppercase;
 }
+.pp-brand span { min-width: 0; line-height: 1.05; }
+.pp-brand svg { flex: none; }
 .pp-chev { transition: transform 0.12s; }
 .pp-brand:hover .pp-chev { transform: translateX(3px); }
 

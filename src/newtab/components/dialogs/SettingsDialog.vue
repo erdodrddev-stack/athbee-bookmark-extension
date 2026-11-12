@@ -356,7 +356,7 @@ async function onImport() {
 
         <div v-else class="st-about">
           <Logo :size="56" />
-          <div class="st-about-name">Bookdeck</div>
+          <div class="st-about-name">Athbee Bookmark</div>
           <div class="st-hint">{{ t('version', { v: version }) }}</div>
           <button class="pro-plan" @click="openDialog('upgrade', { back: { type: 'settings', props: { tab: 'about' } } })">
             <span class="st-label">{{ t('proPlan') }}: {{ isPro ? t('proPlanPro') : t('proPlanFree') }}</span>
@@ -364,6 +364,7 @@ async function onImport() {
             <span class="link-btn">{{ t('proSeeBenefits') }}</span>
           </button>
           <p>{{ t('aboutText') }}</p>
+          <a class="link-btn" href="https://github.com/erdodrddev-stack/athbee-bookmark-extension" target="_blank" rel="noopener">{{ t('sourceCode') }}</a>
           <div class="st-sc-title">{{ t('shortcuts') }}</div>
           <ul class="st-sc">
             <li><span><kbd>/</kbd> <kbd>{{ mod }}</kbd>+<kbd>K</kbd></span>{{ t('scSearch') }}</li>

@@ -18,8 +18,8 @@ const STEPS = [
   { icon: 'wrench', key: 'Maintenance' },
   { icon: 'archive', key: 'Private' },
 ]
-const NEWS = ['IconStyle', 'Backup', 'Maintenance', 'Bulk', 'Sessions', 'Workspaces']
-const NEWS_ICONS = { IconStyle: 'grid', Backup: 'archive', Maintenance: 'wrench', Bulk: 'check', Sessions: 'layers', Workspaces: 'sliders' }
+const NEWS = ['Name', 'Pro', 'Sync', 'AutoBackup', 'Appearance', 'Folders']
+const NEWS_ICONS = { Name: 'sparkle', Pro: 'check', Sync: 'layers', AutoBackup: 'archive', Appearance: 'palette', Folders: 'folder' }
 
 const i = ref(0)
 const last = computed(() => props.mode === 'whatsnew' || i.value === STEPS.length - 1)
