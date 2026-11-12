@@ -6,11 +6,12 @@ import { loadHistory } from '../shared/history'
 import { refreshUsage } from '../shared/usage'
 import { pruneTags } from '../shared/tags'
 import { t } from '../shared/i18n'
-import { ui, go, isSearching } from './ui'
+import { ui, go, isSearching, inFolder } from './ui'
 import Sidebar from './components/Sidebar.vue'
 import TopBar from './components/TopBar.vue'
 import HomeView from './components/HomeView.vue'
 import FolderView from './components/FolderView.vue'
+import SessionsView from './components/SessionsView.vue'
 import SearchResults from './components/SearchResults.vue'
 import ContextMenu from './components/ContextMenu.vue'
 import DialogHost from './components/DialogHost.vue'
@@ -27,7 +28,7 @@ onMounted(async () => {
   await reloadTree()
   pruneTags(getNode)
   watchBookmarkEvents()
-  if (settings.autoOpenLast && meta.lastFolder && getNode(meta.lastFolder)) ui.current = meta.lastFolder
+  if (settings.autoOpenLast && meta.lastFolder && (meta.lastFolder === 'sessions' || getNode(meta.lastFolder))) ui.current = meta.lastFolder
   ready.value = true
   loadHistory()
   // keep last-visit dates growing past the browser's history window (throttled inside)
@@ -40,7 +41,7 @@ watch(() => ui.current, (id) => {
 })
 // Folder deleted while open → back home; forget tags of deleted bookmarks
 watch(byId, () => {
-  if (ui.current !== 'home' && !getNode(ui.current)) go('home')
+  if (inFolder() && !getNode(ui.current)) go('home')
   pruneTags(getNode)
 })
 
@@ -77,6 +78,7 @@ watch(() => t('newTab'), (s) => (document.title = s), { immediate: true })
       <div ref="content" class="content custom-scroll">
         <SearchResults v-if="isSearching()" />
         <HomeView v-else-if="ui.current === 'home'" />
+        <SessionsView v-else-if="ui.current === 'sessions'" />
         <FolderView v-else :key="ui.current" :folder-id="ui.current" />
       </div>
     </main>

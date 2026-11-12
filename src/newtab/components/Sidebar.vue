@@ -11,6 +11,9 @@ import { ui, go, openDialog, isSearching } from '../ui'
 import { check } from '../linkcheck'
 import { extraCopies } from '../duplicates'
 import { isVisible } from '../sort'
+import { sessions, loadSessions } from '../../shared/sessions'
+
+loadSessions()
 
 const linkIssues = computed(() => (check.finishedAt ? check.results.length : 0))
 const issues = computed(() => extraCopies.value + linkIssues.value)
@@ -63,6 +66,12 @@ function startResize(e) {
         <span class="tree-chevron is-leaf" />
         <span class="tree-ico"><Icon name="home" :size="17" /></span>
         <span class="tree-title">{{ t('home') }}</span>
+      </button>
+      <button class="tree-row" :class="{ active: ui.current === 'sessions' && !isSearching() }" @click="go('sessions')">
+        <span class="tree-chevron is-leaf" />
+        <span class="tree-ico"><Icon name="layers" :size="17" /></span>
+        <span class="tree-title">{{ t('sessions') }}</span>
+        <span v-if="sessions.length" class="tree-count">{{ sessions.length }}</span>
       </button>
 
       <template v-if="pinnedFolders.length">

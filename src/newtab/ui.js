@@ -30,6 +30,10 @@ export function clearSearch() {
   ui.advOpen = false
 }
 
+/** Views that aren't a bookmark folder. */
+export const VIEWS = ['home', 'sessions']
+export const inFolder = () => !VIEWS.includes(ui.current)
+
 export function go(id) {
   ui.current = id
   clearSearch()

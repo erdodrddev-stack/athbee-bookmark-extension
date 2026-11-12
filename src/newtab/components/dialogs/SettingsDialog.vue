@@ -23,7 +23,7 @@ const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a
 // ----- backup -----
 const fileInput = ref(null)
 const pending = ref(null) // { data, sum, name }
-const opts = reactive({ bookmarks: true, meta: true, settings: true })
+const opts = reactive({ bookmarks: true, meta: true, settings: true, sessions: true })
 const busy = ref(false)
 const result = ref(null)
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString() : '')
@@ -178,6 +178,7 @@ async function onImport() {
               <li><b>{{ pending.sum.folders }}</b> {{ t('bkFolders') }}</li>
               <li><b>{{ pending.sum.tags }}</b> {{ t('bkTags') }}</li>
               <li><b>{{ pending.sum.pinned + pending.sum.hidden }}</b> {{ t('bkPinnedHidden') }}</li>
+              <li v-if="pending.sum.sessions"><b>{{ pending.sum.sessions }}</b> {{ t('bkSessions') }}</li>
             </ul>
             <label class="bk-opt">
               <span><span class="st-label">{{ t('bkOptBookmarks') }}</span><span class="st-hint">{{ t('bkOptBookmarksHint') }}</span></span>
@@ -187,13 +188,17 @@ async function onImport() {
               <span><span class="st-label">{{ t('bkOptMeta') }}</span><span class="st-hint">{{ t('bkOptMetaHint') }}</span></span>
               <Toggle v-model="opts.meta" />
             </label>
+            <label v-if="pending.sum.sessions" class="bk-opt">
+              <span><span class="st-label">{{ t('sessions') }}</span><span class="st-hint">{{ t('bkOptSessionsHint') }}</span></span>
+              <Toggle v-model="opts.sessions" />
+            </label>
             <label v-if="pending.sum.hasSettings" class="bk-opt">
               <span><span class="st-label">{{ t('bkOptSettings') }}</span><span class="st-hint">{{ t('bkOptSettingsHint') }}</span></span>
               <Toggle v-model="opts.settings" />
             </label>
             <div class="bk-actions">
               <button class="btn btn-ghost" :disabled="busy" @click="pending = null">{{ t('cancel') }}</button>
-              <button class="btn btn-primary" :disabled="busy || !(opts.bookmarks || opts.meta || opts.settings)" @click="onImport">
+              <button class="btn btn-primary" :disabled="busy || !(opts.bookmarks || opts.meta || opts.settings || (opts.sessions && pending.sum.sessions))" @click="onImport">
                 {{ busy ? t('importing') : t('importBtn') }}
               </button>
             </div>

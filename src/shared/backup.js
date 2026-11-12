@@ -10,6 +10,7 @@ import { setTags, normHex } from './tags'
 import { normUrl, plain } from './util'
 import { reloadTree } from './bookmarks'
 import { refreshUsage, mergeUsage } from './usage'
+import { sessions, loadSessions, importSessions } from './sessions'
 
 export const BACKUP_APP = 'bookdeck'
 export const BACKUP_VERSION = 1
@@ -36,6 +37,7 @@ export async function buildBackup() {
   await flushPersist()
   const [tree] = await chrome.bookmarks.getTree()
   const u = await refreshUsage()
+  await loadSessions()
   return {
     app: BACKUP_APP,
     version: BACKUP_VERSION,
@@ -46,6 +48,7 @@ export async function buildBackup() {
     settings: plain(settings),
     // last visit of each bookmarked page, so "unused" survives a move to another browser
     usage: { since: u.since, oldest: u.oldest ?? u.since, last: u.last },
+    sessions: sessions.value,
   }
 }
 
@@ -74,7 +77,13 @@ export function summarize(data) {
     n.children?.forEach(walk)
   }
   data.roots.forEach((r) => r.children?.forEach(walk))
-  return { ...s, tags: s.tags.size, exportedAt: data.exportedAt, hasSettings: !!data.settings }
+  return {
+    ...s,
+    tags: s.tags.size,
+    sessions: Array.isArray(data.sessions) ? data.sessions.length : 0,
+    exportedAt: data.exportedAt,
+    hasSettings: !!data.settings,
+  }
 }
 
 /** Throws an Error with `code` ('invalid' | 'newer') when the file can't be used. */
@@ -179,6 +188,7 @@ export async function importBackup(data, opts) {
   }
 
   if (opts.meta && data.usage) await mergeUsage(data.usage)
+  if (opts.sessions && data.sessions) stats.sessions = await importSessions(data.sessions)
 
   if (opts.settings && data.settings) {
     for (const k of Object.keys(DEFAULTS)) {

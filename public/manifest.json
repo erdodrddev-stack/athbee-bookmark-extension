@@ -3,7 +3,7 @@
   "name": "Bookdeck",
   "version": "0.1.0",
   "description": "Uma nova guia para acessar e organizar seus favoritos, com recomendações baseadas no seu histórico.",
-  "permissions": ["bookmarks", "storage", "history", "tabs", "favicon", "search"],
+  "permissions": ["bookmarks", "storage", "history", "tabs", "favicon", "search", "tabGroups"],
   "optional_host_permissions": ["<all_urls>"],
   "chrome_url_overrides": {
     "newtab": "newtab.html"

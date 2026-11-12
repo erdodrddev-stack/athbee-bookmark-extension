@@ -5,7 +5,7 @@ import Icon from '../../components/Icon.vue'
 import { settings } from '../../shared/settings'
 import { t } from '../../shared/i18n'
 import { pathTo, byId, defaultFolderId } from '../../shared/bookmarks'
-import { ui, go, openMenu, openDialog, isSearching, clearSearch, filterCount } from '../ui'
+import { ui, go, openMenu, openDialog, isSearching, clearSearch, filterCount, inFolder } from '../ui'
 import { folderMenu } from '../menus'
 import { results, runResult } from '../search'
 import AdvancedSearch from './AdvancedSearch.vue'
@@ -22,7 +22,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocDown))
 
 const path = computed(() => {
   void byId.value
-  return ui.current === 'home' ? [] : pathTo(ui.current)
+  return inFolder() ? pathTo(ui.current) : []
 })
 
 watch(() => ui.focusSearch, () => nextTick(() => input.value?.focus()))
@@ -52,7 +52,7 @@ function sortMenu(e) {
 }
 
 function addMenu(e) {
-  const parentId = ui.current === 'home' ? defaultFolderId() : ui.current
+  const parentId = inFolder() ? ui.current : defaultFolderId()
   openMenu(e.currentTarget, [
     { label: t('addBookmark'), icon: 'bookmark-plus', action: () => openDialog('bookmark', { parentId }) },
     { label: t('addFolder'), icon: 'folder-plus', action: () => openDialog('folder', { parentId }) },
@@ -69,7 +69,11 @@ function addMenu(e) {
     <nav class="crumbs">
       <span v-if="isSearching()" class="crumb last">{{ t('searchResults') }}</span>
       <template v-else>
-        <button class="crumb" :class="{ last: !path.length }" @click="go('home')">{{ t('home') }}</button>
+        <button class="crumb" :class="{ last: !path.length && ui.current !== 'sessions' }" @click="go('home')">{{ t('home') }}</button>
+        <template v-if="ui.current === 'sessions'">
+          <Icon name="chevron-right" :size="14" class="crumb-sep" />
+          <span class="crumb last">{{ t('sessions') }}</span>
+        </template>
         <template v-for="(n, i) in path" :key="n.id">
           <Icon name="chevron-right" :size="14" class="crumb-sep" />
           <button
