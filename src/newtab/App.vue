@@ -18,6 +18,7 @@ import DialogHost from './components/DialogHost.vue'
 import Toast from './components/Toast.vue'
 import SelectionBar from './components/SelectionBar.vue'
 import { sel, clearSelection } from './selection'
+import { inWorkspace, switchByIndex, pruneWorkspaces } from '../shared/workspaces'
 
 const ready = ref(false)
 const content = ref(null)
@@ -39,9 +40,14 @@ watch(() => ui.current, (id) => {
   meta.lastFolder = id
   if (content.value) content.value.scrollTop = 0
 })
+// Switching workspace away from the open folder → back home
+watch(() => meta.activeWs, () => {
+  if (inFolder() && !inWorkspace(getNode(ui.current))) go('home')
+})
 // Folder deleted while open → back home; forget tags of deleted bookmarks
 watch(byId, () => {
   if (inFolder() && !getNode(ui.current)) go('home')
+  pruneWorkspaces()
   pruneTags(getNode)
 })
 
@@ -50,6 +56,12 @@ function onKey(e) {
   if (ui.dialog) return
   if (e.key === 'Escape' && sel.ids.length && !isTyping(document.activeElement)) {
     clearSelection()
+    return
+  }
+  // Alt+0 = everything, Alt+1..9 = workspaces (e.code, since Option+digit types symbols on macOS)
+  if (e.altKey && !e.ctrlKey && !e.metaKey && /^Digit\d$/.test(e.code) && !isTyping(document.activeElement)) {
+    e.preventDefault()
+    switchByIndex(Number(e.code.slice(5)))
     return
   }
   const k = e.key.toLowerCase()

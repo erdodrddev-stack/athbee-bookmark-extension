@@ -70,6 +70,7 @@ onBeforeUnmount(() => {
         >
           <span class="ctx-ico"><Icon v-if="it.icon" :name="it.icon" :size="16" /></span>
           <span class="ctx-label">{{ it.label }}</span>
+          <kbd v-if="it.hint" class="ctx-hint">{{ it.hint }}</kbd>
           <Icon v-if="it.checked" name="check" :size="15" class="ctx-check" />
         </button>
       </template>

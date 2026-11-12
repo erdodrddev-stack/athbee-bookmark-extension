@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { t } from '../../shared/i18n'
 import { faviconUrl, hostOf } from '../../shared/util'
@@ -10,6 +10,9 @@ import {
 } from '../../shared/sessions'
 import { toast, openMenu, openDialog, go } from '../ui'
 import { openUrl } from '../actions'
+import { activeWs } from '../../shared/workspaces'
+
+const shown = computed(() => (activeWs.value ? sessions.value.filter((s) => s.ws === activeWs.value.id) : sessions.value))
 
 const name = ref('')
 const close = ref(false)
@@ -37,7 +40,7 @@ onBeforeUnmount(() => {
 async function save() {
   saving.value = true
   try {
-    const s = await saveWindow({ name: name.value, close: close.value })
+    const s = await saveWindow({ name: name.value, close: close.value, ws: activeWs.value?.id })
     if (s) {
       toast(t('sessSaved', { n: s.tabs.length }))
       name.value = ''
@@ -108,12 +111,12 @@ const vFocus = { mounted: (el) => { el.focus(); el.select() } }
       </label>
     </form>
 
-    <div v-if="!sessions.length" class="empty">
+    <div v-if="!shown.length" class="empty">
       <Icon name="layers" :size="18" /> {{ t('sessEmpty') }}
     </div>
 
     <div class="sess-list">
-      <article v-for="s in sessions" :key="s.id" class="sess-card">
+      <article v-for="s in shown" :key="s.id" class="sess-card">
         <header class="sess-head">
           <button class="icon-btn sess-chev" :aria-expanded="expanded.has(s.id)" :title="t('sessShowTabs')" @click="toggle(s.id)">
             <Icon name="chevron-down" :size="16" class="hsec-chev" :class="{ closed: !expanded.has(s.id) }" />

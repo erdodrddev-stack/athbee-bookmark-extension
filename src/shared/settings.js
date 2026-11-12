@@ -43,6 +43,8 @@ const META_DEFAULTS = {
   tagColors: {}, // tag -> '#rrggbb' chosen by the user
   tagsOpen: true,
   dupIgnored: [], // duplicate groups (dupKey) the user chose to keep
+  workspaces: [], // see shared/workspaces.js
+  activeWs: null, // id of the active workspace, null = everything
 }
 
 export const settings = reactive({ ...DEFAULTS })
@@ -120,10 +122,18 @@ export function applyTheme() {
     root.classList.toggle('dark', dark)
     root.classList.toggle('light', !dark)
     root.classList.toggle('no-anim', settings.disableAnimations)
-    const accent = ACCENTS.find((a) => a.id === settings.accent) ?? ACCENTS[0]
+    // the active workspace may override the accent color and the look
+    const ws = meta.workspaces.find((w) => w.id === meta.activeWs)
+    const accentId = ws?.accent || settings.accent
+    const look = ws?.look || settings.look
+    const accent = ACCENTS.find((a) => a.id === accentId) ?? ACCENTS[0]
     root.style.setProperty('--accent', accent.hex)
-    root.dataset.look = LOOKS.includes(settings.look) ? settings.look : LOOKS[0]
+    root.dataset.look = LOOKS.includes(look) ? look : LOOKS[0]
   }
-  watch(() => [settings.theme, settings.accent, settings.look, settings.disableAnimations], update, { immediate: true })
+  watch(
+    () => [settings.theme, settings.accent, settings.look, settings.disableAnimations, meta.activeWs, meta.workspaces.map((w) => [w.accent, w.look])],
+    update,
+    { immediate: true, deep: true },
+  )
   mq.addEventListener('change', update)
 }

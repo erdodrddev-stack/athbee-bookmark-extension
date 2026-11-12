@@ -66,12 +66,13 @@ export const defaultName = () =>
   new Date().toLocaleString(undefined, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
 
 /** Save the current window as a new session; optionally close the saved tabs (like OneTab). */
-export async function saveWindow({ name, close = false } = {}) {
+export async function saveWindow({ name, close = false, ws = null } = {}) {
   await loadSessions()
   const tabs = await captureWindow()
   if (!tabs.length) return null
   const now = Date.now()
   const s = { id: uid(), name: (name || '').trim() || defaultName(), createdAt: now, updatedAt: now, tabs: strip(tabs) }
+  if (ws) s.ws = ws // shown only in that workspace
   await write([s, ...sessions.value])
   if (close) {
     try {

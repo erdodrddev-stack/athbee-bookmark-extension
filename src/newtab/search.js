@@ -7,6 +7,7 @@ import { fold, normUrl } from '../shared/util'
 import { ui, go, isSearching } from './ui'
 import { isVisible } from './sort'
 import { openFromEvent } from './actions'
+import { inWorkspace } from '../shared/workspaces'
 
 const visibleWithAncestors = (n) => pathTo(n.id).every(isVisible)
 
@@ -61,7 +62,7 @@ function bookmarkMatches(b) {
   const mine = tagsOf(b.id)
   if (!passesFilter(mine)) return false
   if (text.length && !text.every((tk) => (fold(b.title) + ' ' + fold(b.url) + ' ' + mine.join(' ')).includes(tk))) return false
-  return visibleWithAncestors(b)
+  return inWorkspace(b) && visibleWithAncestors(b)
 }
 
 /** How many bookmarks match right now (not capped like the result list). */
@@ -96,7 +97,7 @@ export const results = computed(() => {
     for (const n of byId.value.values()) {
       if (n.url || !n.parentId || n.parentId === '0') continue
       const ft = fold(n.title)
-      if (matches(ft) && visibleWithAncestors(n)) folders.push({ kind: 'folder', node: n, rank: ft.startsWith(first) ? 0 : 1 })
+      if (matches(ft) && inWorkspace(n) && visibleWithAncestors(n)) folders.push({ kind: 'folder', node: n, rank: ft.startsWith(first) ? 0 : 1 })
     }
     folders.sort((a, b) => a.rank - b.rank)
   }

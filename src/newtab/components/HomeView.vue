@@ -12,11 +12,13 @@ import { normUrl, hostOf } from '../../shared/util'
 import { go, openMenu } from '../ui'
 import { folderMenu } from '../menus'
 import { isVisible } from '../sort'
+import { activeWs, inWorkspace, wsFolders } from '../../shared/workspaces'
+import { openDialog } from '../ui'
 
 const bookmarkByUrl = computed(() => {
   void byId.value
   const m = new Map()
-  for (const b of allBookmarks()) if (isVisible(b) && !m.has(normUrl(b.url))) m.set(normUrl(b.url), b)
+  for (const b of allBookmarks()) if (isVisible(b) && inWorkspace(b) && !m.has(normUrl(b.url))) m.set(normUrl(b.url), b)
   return m
 })
 
@@ -43,12 +45,13 @@ const fromHistory = computed(() => {
 
 const pinnedItems = computed(() => {
   void byId.value
-  return meta.pinned.map(getNode).filter((n) => n && isVisible(n))
+  return meta.pinned.map(getNode).filter((n) => n && isVisible(n) && inWorkspace(n))
 })
 
-const bar = computed(() => {
+// the bookmarks bar, or every folder of the active workspace
+const sections = computed(() => {
   void byId.value
-  return topFolders()[0]
+  return wsFolders.value || [topFolders()[0]].filter(Boolean)
 })
 </script>
 
@@ -83,14 +86,20 @@ const bar = computed(() => {
       </div>
     </section>
 
-    <section v-if="bar" class="hsec">
+    <section v-for="f in sections" :key="f.id" class="hsec">
       <h2 class="hsec-title">
-        <button class="hsec-link" @click="go(bar.id)" @contextmenu.prevent="openMenu($event, folderMenu(bar))">
-          {{ bar.title }}
+        <button class="hsec-link" @click="go(f.id)" @contextmenu.prevent="openMenu($event, folderMenu(f))">
+          {{ f.title }}
           <Icon name="chevron-right" :size="18" />
         </button>
       </h2>
-      <FolderView :folder-id="bar.id" />
+      <FolderView :folder-id="f.id" />
     </section>
+
+    <div v-if="activeWs && !sections.length" class="empty">
+      <Icon name="folder-plus" :size="18" />
+      {{ t('wsNoFolders', { name: activeWs.name }) }}
+      <button class="btn btn-ghost lc-gbtn" @click="openDialog('workspaces', { editId: activeWs.id })">{{ t('wsChooseFolders') }}</button>
+    </div>
   </div>
 </template>

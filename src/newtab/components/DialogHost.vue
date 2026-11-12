@@ -10,6 +10,7 @@ import TagColorDialog from './dialogs/TagColorDialog.vue'
 import MaintenanceDialog from './dialogs/MaintenanceDialog.vue'
 import BulkMoveDialog from './dialogs/BulkMoveDialog.vue'
 import BulkTagsDialog from './dialogs/BulkTagsDialog.vue'
+import WorkspacesDialog from './dialogs/WorkspacesDialog.vue'
 
 const MAP = {
   bookmark: BookmarkDialog,
@@ -22,6 +23,7 @@ const MAP = {
   maintenance: MaintenanceDialog,
   bulkMove: BulkMoveDialog,
   bulkTags: BulkTagsDialog,
+  workspaces: WorkspacesDialog,
 }
 </script>
 

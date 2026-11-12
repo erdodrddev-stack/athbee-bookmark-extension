@@ -431,6 +431,8 @@ body.resizing { cursor: col-resize; user-select: none; }
 .ctx-item.danger .ctx-ico, .ctx-item.danger:hover .ctx-ico { color: inherit; }
 .ctx-label { flex: 1; white-space: nowrap; }
 .ctx-check { color: var(--text); }
+.ctx-hint { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--text-3); background: none; border: 0; padding: 0; }
+.ctx-hint + .ctx-check { margin-left: 4px; }
 .ctx-div { height: var(--bw); background: var(--line); }
 .ctx-head {
   padding: 10px 12px 6px;
@@ -523,6 +525,35 @@ body.resizing { cursor: col-resize; user-select: none; }
 .st-range input:focus-visible::-webkit-slider-thumb { box-shadow: var(--focus-shadow); outline: 2px solid var(--ink); }
 .st-range output { width: 48px; font-family: var(--font-mono); font-size: 12px; color: var(--text-2); text-align: right; font-variant-numeric: tabular-nums; }
 .st-row .btn { flex: none; gap: 8px; }
+
+/* ---------- Workspaces ---------- */
+.ws-switch {
+  display: flex; align-items: center; gap: 8px; margin: 0 10px 6px; padding: 0 10px; height: 36px;
+  border: var(--bw) solid var(--line); background: var(--card); font-size: 13px; font-weight: 700; color: var(--text);
+}
+.ws-switch:hover { border-color: var(--edge); }
+.ws-switch.on { background: var(--accent); border-color: var(--edge-on); color: var(--on-accent); }
+.ws-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.wsd { display: flex; gap: 20px; min-height: 420px; padding-bottom: 8px; }
+.wsd-list { flex: none; width: 190px; display: flex; flex-direction: column; gap: 4px; padding-right: 16px; border-right: var(--bw) solid var(--line); }
+.wsd-item { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 10px; border: var(--bw) solid transparent; font-size: 13px; color: var(--text-2); text-align: left; }
+.wsd-item:hover { background: var(--hover); color: var(--text); }
+.wsd-item.on { border-color: var(--edge); background: var(--card); color: var(--text); font-weight: 700; box-shadow: var(--shadow-sm); }
+.wsd-item-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wsd-dot { flex: none; width: 12px; height: 12px; border: var(--bw) solid var(--edge); }
+.wsd-new { color: var(--text-3); }
+.wsd-tip { margin-top: auto; }
+.wsd-edit { flex: 1; min-width: 0; }
+.wsd-folders { max-height: 230px; overflow: auto; border: var(--bw) solid var(--line); background: var(--bg); padding: 4px 0; }
+.wsd-folder { display: flex; align-items: center; gap: 8px; height: 30px; padding-right: 10px; font-size: 13px; cursor: pointer; }
+.wsd-folder:hover { background: var(--hover); }
+.wsd-folder input { margin: 0; accent-color: var(--accent); }
+.wsd-folder svg { flex: none; color: var(--text-3); }
+.wsd-folder span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wsd-folder.inherited { color: var(--text-3); cursor: default; }
+.wsd-del { margin-right: auto; gap: 6px; }
+.wsd-del:hover { color: var(--danger); }
+@media (max-width: 640px) { .wsd { flex-direction: column; } .wsd-list { width: auto; border: 0; padding: 0; } }
 
 /* ---------- Sessions ---------- */
 .sess { max-width: 980px; }

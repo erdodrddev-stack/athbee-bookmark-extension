@@ -11,6 +11,7 @@ import { normUrl, plain } from './util'
 import { reloadTree } from './bookmarks'
 import { refreshUsage, mergeUsage } from './usage'
 import { sessions, loadSessions, importSessions } from './sessions'
+import { exportWorkspaces, importWorkspaces } from './workspaces'
 
 export const BACKUP_APP = 'bookdeck'
 export const BACKUP_VERSION = 1
@@ -49,6 +50,7 @@ export async function buildBackup() {
     // last visit of each bookmarked page, so "unused" survives a move to another browser
     usage: { since: u.since, oldest: u.oldest ?? u.since, last: u.last },
     sessions: sessions.value,
+    workspaces: exportWorkspaces((tree.children || []).filter((r) => !r.unmodifiable)),
   }
 }
 
@@ -189,6 +191,11 @@ export async function importBackup(data, opts) {
 
   if (opts.meta && data.usage) await mergeUsage(data.usage)
   if (opts.sessions && data.sessions) stats.sessions = await importSessions(data.sessions)
+  if (opts.meta && data.workspaces) {
+    // folders may have just been created: resolve paths against the fresh tree
+    const [fresh] = await chrome.bookmarks.getTree()
+    stats.workspaces = importWorkspaces(data.workspaces, (fresh.children || []).filter((r) => !r.unmodifiable))
+  }
 
   if (opts.settings && data.settings) {
     for (const k of Object.keys(DEFAULTS)) {
