@@ -1,4 +1,5 @@
 import { t } from '../shared/i18n'
+import { isSelected, toggleSelect } from './selection'
 import { meta } from '../shared/settings'
 import { openDialog } from './ui'
 import { isVisible } from './sort'
@@ -17,6 +18,7 @@ export function bookmarkMenu(n) {
     { label: t('editTags'), icon: 'tag', action: () => openDialog('bookmark', { node: n, focusTags: true }) },
     { label: t('copyUrl'), icon: 'copy', action: () => A.copyText(n.url) },
     { label: t('showQr'), icon: 'qr', action: () => openDialog('qr', { url: n.url, title: n.title }) },
+    { label: isSelected(n.id) ? t('deselect') : t('select'), icon: 'check', action: () => toggleSelect(n.id) },
     { divider: true },
     { label: pinned ? t('unpin') : t('pin'), icon: 'pin', action: () => A.togglePin(n.id) },
     { label: hidden ? t('unhide') : t('hide'), icon: hidden ? 'eye' : 'eye-off', action: () => A.toggleHidden(n.id) },

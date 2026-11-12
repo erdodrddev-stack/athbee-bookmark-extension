@@ -216,6 +216,7 @@ async function onImport() {
             <li><span><kbd>{{ mod }}</kbd>+clique</span>{{ t('scBackground') }}</li>
             <li><span><kbd>Shift</kbd>+clique</span>{{ t('scWindow') }}</li>
             <li><span><kbd>↑</kbd> <kbd>↓</kbd> <kbd>↵</kbd></span>{{ t('searchResults') }}</li>
+            <li><span><Icon name="check" :size="12" /> {{ t('select').toLowerCase() }}</span>{{ t('scSelect') }}</li>
           </ul>
           <p class="st-hint">{{ t('scDrag') }}</p>
         </div>

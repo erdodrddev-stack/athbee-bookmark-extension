@@ -10,6 +10,8 @@ import { dnd, startDrag, endDrag, canDrop, dropBeside } from '../dnd'
 import { tagsOf } from '../../shared/tags'
 import { applyTag } from '../search'
 import TagPill from '../../components/TagPill.vue'
+import { t } from '../../shared/i18n'
+import { sel, isSelected, toggleSelect, selectRange } from '../selection'
 
 const props = defineProps({
   node: { type: Object, required: true },
@@ -34,8 +36,20 @@ const tags = computed(() => (props.history ? [] : tagsOf(props.node.id)))
 const shownTags = computed(() => tags.value.slice(0, MAX_TAGS))
 const extraTags = computed(() => tags.value.length - shownTags.value.length)
 
+const selectable = computed(() => !props.history)
+const selected = computed(() => selectable.value && isSelected(props.node.id))
+
 function onClick(e) {
+  if (selectable.value && sel.ids.length) {
+    if (e.shiftKey) selectRange(props.node.id)
+    else toggleSelect(props.node.id)
+    return
+  }
   openFromEvent(e, props.node.url)
+}
+function onCheck(e) {
+  if (e.shiftKey && sel.ids.length) selectRange(props.node.id)
+  else toggleSelect(props.node.id)
 }
 function onAux(e) {
   if (e.button === 1) { e.preventDefault(); openFromEvent(e, props.node.url) }
@@ -73,6 +87,7 @@ function onDrop(e) {
       styleClass,
       {
         'is-pinned': pinned,
+        'is-selected': selected,
         'is-hidden': hidden,
         'is-dragging': dnd.id === node.id,
         'drop-before': dropPos === 'before',
@@ -80,6 +95,7 @@ function onDrop(e) {
       },
     ]"
     :href="node.url"
+    :data-id="selectable ? node.id : null"
     :title="(node.title ? node.title + '\n' : '') + node.url + (tags.length ? '\n' + tags.map((x) => '#' + x).join(' ') : '')"
     draggable="true"
     @click.prevent="onClick"
@@ -91,6 +107,14 @@ function onDrop(e) {
     @dragleave="onDragLeave"
     @drop="onDrop"
   >
+    <span
+      v-if="selectable"
+      class="bm-check"
+      role="checkbox"
+      :aria-checked="selected"
+      :title="t('select')"
+      @click.stop.prevent="onCheck"
+    ><Icon name="check" :size="12" /></span>
     <span class="bm-icon">
       <img :src="icon" alt="" width="20" height="20" draggable="false" />
     </span>

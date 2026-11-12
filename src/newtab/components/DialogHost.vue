@@ -8,6 +8,8 @@ import SettingsDialog from './dialogs/SettingsDialog.vue'
 import TagRenameDialog from './dialogs/TagRenameDialog.vue'
 import TagColorDialog from './dialogs/TagColorDialog.vue'
 import MaintenanceDialog from './dialogs/MaintenanceDialog.vue'
+import BulkMoveDialog from './dialogs/BulkMoveDialog.vue'
+import BulkTagsDialog from './dialogs/BulkTagsDialog.vue'
 
 const MAP = {
   bookmark: BookmarkDialog,
@@ -18,6 +20,8 @@ const MAP = {
   tagRename: TagRenameDialog,
   tagColor: TagColorDialog,
   maintenance: MaintenanceDialog,
+  bulkMove: BulkMoveDialog,
+  bulkTags: BulkTagsDialog,
 }
 </script>
 

@@ -15,6 +15,8 @@ import SearchResults from './components/SearchResults.vue'
 import ContextMenu from './components/ContextMenu.vue'
 import DialogHost from './components/DialogHost.vue'
 import Toast from './components/Toast.vue'
+import SelectionBar from './components/SelectionBar.vue'
+import { sel, clearSelection } from './selection'
 
 const ready = ref(false)
 const content = ref(null)
@@ -45,6 +47,10 @@ watch(byId, () => {
 const isTyping = (el) => el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))
 function onKey(e) {
   if (ui.dialog) return
+  if (e.key === 'Escape' && sel.ids.length && !isTyping(document.activeElement)) {
+    clearSelection()
+    return
+  }
   const k = e.key.toLowerCase()
   if ((k === 'k' && (e.ctrlKey || e.metaKey)) || (e.key === '/' && !isTyping(document.activeElement))) {
     e.preventDefault()
@@ -64,7 +70,7 @@ watch(() => t('newTab'), (s) => (document.title = s), { immediate: true })
 </script>
 
 <template>
-  <div v-if="ready" class="app" :class="{ 'sidebar-collapsed': settings.sidebarCollapsed, 'style-icon': settings.style === 'icon' }" :style="vars">
+  <div v-if="ready" class="app" :class="{ 'sidebar-collapsed': settings.sidebarCollapsed, 'style-icon': settings.style === 'icon', selecting: sel.ids.length > 0 }" :style="vars">
     <Sidebar />
     <main class="main">
       <TopBar />
@@ -76,6 +82,7 @@ watch(() => t('newTab'), (s) => (document.title = s), { immediate: true })
     </main>
     <ContextMenu />
     <DialogHost />
+    <SelectionBar />
     <Toast />
   </div>
 </template>
