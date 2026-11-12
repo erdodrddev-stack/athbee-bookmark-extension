@@ -1,5 +1,5 @@
 /**
- * Service worker: Bookdeck Pro payments through ExtensionPay (extensionpay.com, Stripe).
+ * Service worker: Athbee Bookmark Pro payments through ExtensionPay (extensionpay.com, Stripe).
  *
  * ExtPay must live here (startBackground at top level). Pages talk to it by message:
  *   { type: 'pro:pay' }   open the payment page

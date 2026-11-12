@@ -12,7 +12,7 @@ python3 -m venv .venv
 ```
 
 No `playwright install` is needed: the test uses a browser already on the machine.
-It looks for Brave, Edge or Chromium; set `BOOKDECK_BROWSER=/path/to/browser` to pick
+It looks for Brave, Edge or Chromium; set `ATHBEE_BROWSER=/path/to/browser` to pick
 another. Branded Google Chrome 137+ ignores `--load-extension`, so it can't be used.
 
 ## Run
