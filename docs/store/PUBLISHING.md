@@ -5,26 +5,27 @@ or a decision.
 
 ## 1. Before uploading
 
-- [ ] `npm run test:e2e` passes (14 steps, no console errors)
+- [ ] `npm run test:e2e` passes (21 steps, no console errors)
 - [ ] **(you)** Load `dist/` unpacked once (`chrome://extensions` → Load unpacked) and click
       Maintenance → Broken links → Check now: the browser's site-access prompt appears,
       and after allowing it the check runs. This is the only flow the automated test
       can't click.
 - [ ] **(you)** Quick look at the welcome tour in a fresh profile and at the update notice
       (it shows for people coming from 0.1)
-- [ ] `npm run package` → `athbee-bookmark-0.3.0.zip`
+- [ ] **(you)** Pro purchase in test mode: "Get Pro (US$ 12)" → ExtensionPay password →
+      Stripe test card `4242 4242 4242 4242` → Pro turns on by itself. Reset the test user
+      in the ExtensionPay dashboard to try again.
+- [ ] The source repository is public (AGPL-3.0; Settings → About and the store text link to it)
+- [ ] `npm run package` → `athbee-bookmark-0.3.0.zip` (includes `LICENSE.txt`)
 
-## 2. Privacy policy URL **(you)**
+## 2. Privacy policy URL
 
-The store requires a public URL. Host `docs/privacy-policy.html` (standalone page, no
-dependencies) anywhere public, for example:
+Published with the site (repository `bookdeck-site`, GitHub Pages):
+https://erdodrddev-stack.github.io/bookdeck-site/privacy.html
 
-- GitHub Pages, from a public repository
-- Netlify Drop / Cloudflare Pages: drag the file in
-- any personal site
+After editing `docs/privacy-policy.md`, rebuild both pages and push the site:
 
-Then update the contact line in `docs/privacy-policy.md` / `.html` (it currently says
-"open an issue in the project repository") with an email or the repository link.
+    python3 scripts/privacy-pages.py ../bookdeck-site
 
 ## 3. Developer account **(you)**
 
@@ -45,12 +46,18 @@ Then update the contact line in `docs/privacy-policy.md` / `.html` (it currently
    - Marquee 1400×560 (optional, used if featured): `marquee-1400x560-en.png` / `marquee-1400x560.png`
 3. **Privacy practices**: single purpose, one justification per permission and the data
    answers are in `docs/store/listing.md` → "Privacy practices tab". Remote code: No.
-   Data collected: none.
-4. **Distribution**: Public, all regions (or start as Unlisted to share a link with
+   Data collected: **personally identifiable information** (the buyer's email) and
+   **financial and payment information** (card details on Stripe's page), both only for a
+   Pro purchase and handled by ExtensionPay/Stripe. Nothing else.
+4. **In-app purchases**: say the extension is free with an optional one-time purchase
+   (Athbee Bookmark Pro, US$ 12); the description already mentions it.
+5. **Distribution**: Public, all regions (or start as Unlisted to share a link with
    friends first)
-5. **Submit for review**. Reviews usually take from a few days up to a couple of weeks;
-   broad permissions (`history`, `tabs`, the optional `<all_urls>`) can make it longer, so
-   the justifications matter.
+6. **Submit for review**. Reviews usually take from a few days up to a couple of weeks;
+   broad permissions (`history`, `tabs`, `downloads`, the optional `<all_urls>`, the content
+   script on extensionpay.com) can make it longer, so the justifications matter.
+7. **After approval**: ExtensionPay leaves test mode on its own and charges for real.
+   Replace the "Chrome Web Store: coming soon" button on the site with the store link.
 
 ## 5. Other stores (optional, same package)
 
