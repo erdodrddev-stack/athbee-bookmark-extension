@@ -97,7 +97,7 @@ function openApp() {
   <div v-if="ready" class="pp">
     <header class="pp-head">
       <button class="pp-brand" :title="t('openApp')" @click="openApp">
-        <Logo :size="24" />
+        <Logo :size="28" />
         <span>Athbee Bookmark</span>
         <Icon name="chevron-right" :size="16" class="pp-chev" />
       </button>

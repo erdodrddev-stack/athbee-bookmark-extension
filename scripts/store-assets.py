@@ -183,7 +183,7 @@ def run_lang(p, lang):
 def promo(p):
     font = 'file://' + os.path.join(ROOT, 'node_modules/@fontsource/archivo-black/files/archivo-black-latin-400-normal.woff2')
     mono = 'file://' + os.path.join(ROOT, 'node_modules/@fontsource/space-mono/files/space-mono-latin-700-normal.woff2')
-    logo = '<svg viewBox="0 0 100 100" width="{s}" height="{s}"><rect width="100" height="100" fill="#191919"/><path d="M33 22h34v58L50 64 33 80z" fill="#f6c324"/></svg>'
+    logo = '<img src="file://' + os.path.join(ROOT, 'public/icons/logo-512.png') + '" width="{s}" height="{s}" alt="">'
     css = f"""@font-face{{font-family:A;src:url({font})}}@font-face{{font-family:M;src:url({mono})}}
       body{{margin:0;background:#f6c324;font-family:A;color:#191919;display:flex;align-items:center;justify-content:center;height:100vh;
       background-image:radial-gradient(#19191922 1.2px,transparent 1.2px);background-size:18px 18px}}

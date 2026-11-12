@@ -58,6 +58,6 @@ Código aberto sob a [GNU AGPL-3.0](LICENSE) (a biblioteca de pagamentos ExtPay.
 - `src/shared/`: favoritos, histórico, configurações, i18n (pt/en), backup, sessões, workspaces, datas de uso
 - `tests/e2e/`: teste de ponta a ponta com Playwright
 - `docs/`: textos da loja e política de privacidade
-- `scripts/make-icons.mjs`: gera os PNGs de `public/icons/`
+- `scripts/make-icons.py` (`npm run icons`): gera os PNGs de `public/icons/` a partir da arte em `assets/logo-source.jpeg` (só o marcador com a abelha, fundo transparente)
 
 Configurações, tags, fixados, ocultos, workspaces, sessões e datas de uso ficam em `chrome.storage.local`. Nenhum favorito ou dado de navegação sai do navegador (a verificação de links só acessa os próprios endereços salvos, e só com permissão). A única consulta externa é o status da licença Pro.

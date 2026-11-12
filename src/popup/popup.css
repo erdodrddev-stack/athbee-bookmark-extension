@@ -18,7 +18,7 @@ html, body { width: 320px; }
   text-transform: uppercase;
 }
 .pp-brand span { min-width: 0; line-height: 1.05; }
-.pp-brand svg { flex: none; }
+.pp-brand .logo, .pp-brand svg { flex: none; }
 .pp-chev { transition: transform 0.12s; }
 .pp-brand:hover .pp-chev { transform: translateX(3px); }
 

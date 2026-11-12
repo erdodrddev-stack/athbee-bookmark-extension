@@ -1,10 +1,9 @@
 <script setup>
 defineProps({ size: { type: [Number, String], default: 24 } })
+// the bee on a bookmark (public/icons, built by scripts/make-icons.py)
+const src = 'icons/logo-256.png'
 </script>
 
 <template>
-  <svg :width="size" :height="size" viewBox="0 0 100 100" aria-hidden="true">
-    <rect width="100" height="100" fill="#191919" style="rx: var(--logo-r, 0)" />
-    <path d="M33 22h34v58L50 64 33 80z" style="fill: var(--accent, #f6c324)" />
-  </svg>
+  <img class="logo" :src="src" :width="size" :height="size" alt="" draggable="false" />
 </template>

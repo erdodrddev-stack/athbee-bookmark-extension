@@ -537,6 +537,7 @@ body.resizing { cursor: col-resize; user-select: none; }
   display: grid; place-items: center; width: 96px; height: 96px; margin-bottom: 18px;
   border: var(--bw) solid var(--edge); background: var(--accent); color: var(--on-accent); box-shadow: var(--shadow);
 }
+.wl-art.wl-logo { border: 0; background: none; box-shadow: none; }
 .wl-h { margin: 0 0 10px; font-family: var(--font-display); font-size: 22px; font-weight: 400; text-transform: uppercase; }
 .wl-p { max-width: 420px; margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-2); }
 .wl-dots { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }

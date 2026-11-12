@@ -45,8 +45,8 @@ function done() {
 
     <div v-else class="wl">
       <div class="wl-step">
-        <div class="wl-art">
-          <Logo v-if="i === 0" :size="56" />
+        <div class="wl-art" :class="{ 'wl-logo': i === 0 }">
+          <Logo v-if="i === 0" :size="96" />
           <Icon v-else :name="STEPS[i].icon" :size="44" />
         </div>
         <h3 class="wl-h">{{ t('welcome' + STEPS[i].key) }}</h3>

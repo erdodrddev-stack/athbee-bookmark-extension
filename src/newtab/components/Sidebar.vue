@@ -80,7 +80,7 @@ function startResize(e) {
   <aside class="sidebar" :aria-hidden="settings.sidebarCollapsed">
     <div class="sb-head">
       <div class="brand">
-        <Logo :size="26" />
+        <Logo :size="32" />
         <span>Athbee Bookmark</span>
       </div>
       <button class="icon-btn" :title="t('collapse')" @click="settings.sidebarCollapsed = true">

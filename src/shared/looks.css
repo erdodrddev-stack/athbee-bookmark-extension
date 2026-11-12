@@ -45,7 +45,6 @@
 :is([data-look='modern'], [data-look='cyber']) .st-range input::-webkit-slider-runnable-track { border-radius: 999px; }
 :is([data-look='modern'], [data-look='cyber']) .st-range input::-webkit-slider-thumb { width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; }
 :is([data-look='modern'], [data-look='cyber']) .st-range input::-moz-range-thumb { border-radius: 50%; width: 16px; }
-:is([data-look='modern'], [data-look='cyber']) { --logo-r: 24px; }
 
 /* display type: bold grotesk instead of Archivo Black */
 :is([data-look='modern'], [data-look='cyber']) :is(
