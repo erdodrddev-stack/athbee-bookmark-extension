@@ -1,2 +1,5 @@
 node_modules/
 dist/
+.venv/
+tests/e2e/.tmp/
+__pycache__/
