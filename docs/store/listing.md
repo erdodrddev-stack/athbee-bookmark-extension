@@ -34,7 +34,7 @@ Athbee Bookmark transforma a nova guia num painel dos seus favoritos. Tudo o que
 • Duplicados: acha a mesma página salva várias vezes, mesmo com endereços um pouco diferentes
 • Seleção em massa: mova, marque, oculte ou exclua vários favoritos de uma vez, sempre com “Desfazer”
 
-★ BOOKDECK PRO: US$ 12, PAGAMENTO ÚNICO
+★ ATHBEE BOOKMARK PRO: US$ 12, PAGAMENTO ÚNICO
 Tudo acima é grátis, sem prazo. O Pro libera, para sempre:
 • Sincronização de tags, workspaces, sessões e configurações entre computadores, pela sua conta Google
 • Backup automático diário ou semanal na pasta Downloads/Athbee Bookmark
@@ -82,7 +82,7 @@ Athbee Bookmark turns the new tab into a dashboard for your bookmarks. Everythin
 • Duplicates: finds the same page saved more than once, even with slightly different addresses
 • Bulk selection: move, tag, hide or delete many bookmarks at once, always with Undo
 
-★ BOOKDECK PRO: US$ 12, ONE-TIME PAYMENT
+★ ATHBEE BOOKMARK PRO: US$ 12, ONE-TIME PAYMENT
 Everything above is free, with no time limit. Pro unlocks, for good:
 • Sync tags, workspaces, sessions and settings across computers through your Google account
 • Daily or weekly automatic backups to Downloads/Athbee Bookmark
