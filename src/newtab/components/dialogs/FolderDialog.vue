@@ -9,6 +9,7 @@ import { toast } from '../../ui'
 const props = defineProps({
   node: Object, // renaming
   parentId: String,
+  move: Boolean, // only pick a new parent for `node`
 })
 const emit = defineEmits(['close'])
 
@@ -16,17 +17,20 @@ const name = ref(props.node?.title ?? '')
 const parent = ref(props.node?.parentId ?? props.parentId ?? defaultFolderId())
 const first = ref(null)
 
+const parentSel = ref(null)
+
 onMounted(() => {
+  if (props.move) return parentSel.value?.$el?.focus()
   first.value?.focus()
   first.value?.select()
 })
 
 async function save() {
   const title = name.value.trim()
-  if (!title) return
+  if (!title && !props.move) return
   try {
     if (props.node) {
-      await chrome.bookmarks.update(props.node.id, { title })
+      if (!props.move && title !== props.node.title) await chrome.bookmarks.update(props.node.id, { title })
       if (parent.value !== props.node.parentId) await chrome.bookmarks.move(props.node.id, { parentId: parent.value })
     } else {
       await chrome.bookmarks.create({ parentId: parent.value, title })
@@ -39,15 +43,15 @@ async function save() {
 </script>
 
 <template>
-  <Modal :title="node ? t('renameFolder') : t('addFolder')" @close="emit('close')">
+  <Modal :title="move ? t('moveFolder') : node ? t('renameFolder') : t('addFolder')" @close="emit('close')">
     <form id="folder-form" @submit.prevent="save">
-      <div class="field">
+      <div v-if="!move" class="field">
         <label for="f-name">{{ t('folderName') }}</label>
         <input id="f-name" ref="first" v-model="name" class="input" required />
       </div>
       <div class="field">
         <label for="f-parent">{{ t('parentFolder') }}</label>
-        <FolderSelect id="f-parent" v-model="parent" :exclude="node?.id" />
+        <FolderSelect id="f-parent" ref="parentSel" v-model="parent" :exclude="node?.id" />
       </div>
     </form>
     <template #footer>

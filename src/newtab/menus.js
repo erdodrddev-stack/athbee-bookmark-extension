@@ -42,6 +42,7 @@ export function folderMenu(n) {
   if (!isRoot) {
     items.push(
       { label: t('rename'), icon: 'pencil', action: () => openDialog('folder', { node: n }) },
+      { label: t('moveTo'), icon: 'folder', action: () => openDialog('folder', { node: n, move: true }) },
       { divider: true },
       { label: pinned ? t('unpin') : t('pin'), icon: 'pin', action: () => A.togglePin(n.id) },
       { label: hidden ? t('unhide') : t('hide'), icon: hidden ? 'eye' : 'eye-off', action: () => A.toggleHidden(n.id) },

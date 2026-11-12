@@ -36,6 +36,12 @@ export function canDrop(e) {
   return !!(dnd.id || dnd.payload || e.dataTransfer?.types?.includes('text/uri-list'))
 }
 
+/** Whether the dragged thing may be dropped into `folderId` (a folder can't go inside itself). */
+export function canDropInto(e, folderId) {
+  if (!canDrop(e)) return false
+  return !(dnd.id && (dnd.id === folderId || isDescendant(folderId, dnd.id)))
+}
+
 function external(e) {
   if (dnd.payload) return dnd.payload
   const url = (e.dataTransfer.getData('text/uri-list') || '').split('\n').find((l) => l && !l.startsWith('#'))

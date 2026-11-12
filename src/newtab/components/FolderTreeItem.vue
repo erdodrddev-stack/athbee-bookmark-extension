@@ -6,7 +6,7 @@ import { t } from '../../shared/i18n'
 import { ui, go, openMenu, isSearching } from '../ui'
 import { folderMenu } from '../menus'
 import { isVisible, showFolder } from '../sort'
-import { canDrop, dropInto } from '../dnd'
+import { dnd, startDrag, endDrag, canDropInto, dropInto } from '../dnd'
 
 const props = defineProps({
   node: { type: Object, required: true },
@@ -22,6 +22,8 @@ const expanded = computed(() => !!meta.expanded[props.node.id])
 const active = computed(() => ui.current === props.node.id && !isSearching())
 const hidden = computed(() => meta.hidden.includes(props.node.id))
 const over = ref(false)
+// top-level folders (Bookmarks bar, Other bookmarks…) can't be moved
+const movable = computed(() => props.node.parentId !== '0')
 
 function toggle() {
   if (expanded.value) delete meta.expanded[props.node.id]
@@ -32,14 +34,29 @@ function onClick() {
   if (!props.flat && subfolders.value.length && !expanded.value) meta.expanded[props.node.id] = true
 }
 function onDragOver(e) {
-  if (!canDrop(e)) return
+  if (!canDropInto(e, props.node.id)) return
   e.preventDefault()
+  e.stopPropagation()
   over.value = true
+  // hovering a collapsed folder while dragging opens it, so deeper targets are reachable
+  if (!expandTimer && !props.flat && !expanded.value && subfolders.value.length) {
+    expandTimer = setTimeout(() => {
+      expandTimer = null
+      if (over.value) meta.expanded[props.node.id] = true
+    }, 700)
+  }
 }
 function onDrop(e) {
   e.preventDefault()
-  over.value = false
+  e.stopPropagation()
+  onDragLeave()
   dropInto(e, props.node.id)
+}
+let expandTimer = null
+function onDragLeave() {
+  over.value = false
+  clearTimeout(expandTimer)
+  expandTimer = null
 }
 </script>
 
@@ -47,12 +64,15 @@ function onDrop(e) {
   <div class="tree-item">
     <button
       class="tree-row"
-      :class="{ active, over, 'is-hidden': hidden }"
+      :class="{ active, over, 'is-hidden': hidden, 'is-dragging': dnd.id === node.id }"
       :style="{ paddingLeft: 8 + depth * 14 + 'px' }"
+      :draggable="movable"
       @click="onClick"
       @contextmenu.prevent="openMenu($event, folderMenu(node))"
+      @dragstart="startDrag($event, node)"
+      @dragend="endDrag"
       @dragover="onDragOver"
-      @dragleave="over = false"
+      @dragleave="onDragLeave"
       @drop="onDrop"
     >
       <span

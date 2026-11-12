@@ -6,7 +6,7 @@ import { t } from '../../shared/i18n'
 import { countBookmarks } from '../../shared/bookmarks'
 import { go, openMenu } from '../ui'
 import { folderMenu } from '../menus'
-import { dnd, startDrag, endDrag, canDrop, dropInto } from '../dnd'
+import { dnd, startDrag, endDrag, canDropInto, dropInto } from '../dnd'
 
 const props = defineProps({ node: { type: Object, required: true } })
 
@@ -16,7 +16,7 @@ const hidden = computed(() => meta.hidden.includes(props.node.id))
 const over = ref(false)
 
 function onDragOver(e) {
-  if (!canDrop(e) || dnd.id === props.node.id) return
+  if (!canDropInto(e, props.node.id)) return
   e.preventDefault()
   e.stopPropagation()
   over.value = true
