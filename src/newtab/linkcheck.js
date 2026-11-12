@@ -8,7 +8,6 @@
 import { reactive } from 'vue'
 import { allBookmarks, getNode, pathTo } from '../shared/bookmarks'
 import { removeBookmarks } from './actions'
-import { normUrl } from '../shared/util'
 
 const ORIGINS = { origins: ['<all_urls>'] }
 const WORKERS = 6
@@ -69,20 +68,26 @@ const TIMED_OUT = new Error('timeout')
 
 const LOGIN = /\/(login|signin|sign-in|sign_in|auth|sso|account\/login|session)s?\b|[?&](continue|returnurl|redirect_uri|next)=/i
 
-/** Same page despite small URL differences (http→https, www, trailing slash, case of host). */
+/**
+ * Same page despite small URL differences: http→https, www, trailing slash,
+ * case of host, or the site only adding query parameters (?locale=…, ?ref=…).
+ */
 function samePage(a, b) {
-  const strip = (u) => {
+  const parts = (u) => {
     try {
       const x = new URL(u)
-      x.protocol = 'https:'
-      x.hostname = x.hostname.replace(/^www\./, '')
-      x.hash = ''
-      return normUrl(x.toString()).toLowerCase()
+      return { host: x.hostname.replace(/^www\./, '').toLowerCase(), path: x.pathname.replace(/\/+$/, ''), params: x.searchParams }
     } catch {
-      return u
+      return null
     }
   }
-  return strip(a) === strip(b)
+  const x = parts(a)
+  const y = parts(b)
+  if (!x || !y) return a === b
+  if (x.host !== y.host || x.path !== y.path) return false
+  // every parameter we had is still there with the same value; extra ones don't matter
+  for (const [k, v] of x.params) if (y.params.get(k) !== v) return false
+  return true
 }
 
 /** -> null when fine, otherwise { kind: 'broken' | 'redirect' | 'warn', code, finalUrl } */
