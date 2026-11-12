@@ -13,6 +13,8 @@ import { extraCopies } from '../duplicates'
 import { isVisible } from '../sort'
 import { sessions, loadSessions } from '../../shared/sessions'
 import { activeWs, inWorkspace, wsFolders, switchWorkspace } from '../../shared/workspaces'
+import { LIMITS, isPro } from '../../shared/premium'
+import { requirePro } from '../pro'
 
 loadSessions()
 
@@ -20,7 +22,8 @@ const linkIssues = computed(() => (check.finishedAt ? check.results.length : 0))
 const issues = computed(() => extraCopies.value + linkIssues.value)
 // open on the tab that has something to show
 function openMaintenance() {
-  const tab = check.running || linkIssues.value ? 'links' : extraCopies.value ? 'duplicates' : 'stale'
+  // (stale bookmarks are Pro, so the free plan starts on duplicates instead)
+  const tab = check.running || linkIssues.value ? 'links' : extraCopies.value || !isPro.value ? 'duplicates' : 'stale'
   openDialog('maintenance', { tab })
 }
 
@@ -47,7 +50,11 @@ function wsMenu(e) {
       action: () => switchWorkspace(w.id),
     })),
     { divider: true },
-    { label: t('wsNew'), icon: 'plus', action: () => openDialog('workspaces', { create: true }) },
+    {
+      label: t('wsNew'),
+      icon: 'plus',
+      action: () => (meta.workspaces.length < LIMITS.workspaces || requirePro('workspaces')) && openDialog('workspaces', { create: true }),
+    },
     { label: t('wsManage'), icon: 'settings', action: () => openDialog('workspaces', { editId: activeWs.value?.id }) },
   ])
 }

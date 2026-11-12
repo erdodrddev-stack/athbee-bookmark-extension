@@ -5,6 +5,8 @@ import { t } from '../../../shared/i18n'
 import { getNode } from '../../../shared/bookmarks'
 import { faviconUrl, hostOf } from '../../../shared/util'
 import { toast } from '../../ui'
+import { requirePro } from '../../pro'
+import ProBadge from '../../../components/ProBadge.vue'
 import { openUrl } from '../../actions'
 import { check, targets, requestAccess, runCheck, stopCheck, dismiss, updateUrls, removeAll } from '../../linkcheck'
 
@@ -41,6 +43,7 @@ function reason(r) {
 
 const confirming = ref(null) // group kind waiting for a second click to delete
 async function deleteGroup(items) {
+  if (!requirePro('bulkFix')) return
   if (confirming.value !== items[0].kind) { confirming.value = items[0].kind; return }
   confirming.value = null
   const undo = await removeAll(items)
@@ -51,6 +54,7 @@ async function deleteOne(r) {
   toast(t('deleted'), t('undo'), undo)
 }
 async function fixGroup(items) {
+  if (!requirePro('bulkFix')) return
   await updateUrls(items)
   toast(t('lcUpdated', { n: items.length }))
 }
@@ -83,7 +87,7 @@ async function fixGroup(items) {
           <header class="lc-ghead">
             <span class="lc-gtitle" :class="'lc-' + g.kind">{{ t('lcGroup_' + g.kind) }} <b>{{ g.items.length }}</b></span>
             <button v-if="g.kind === 'redirect'" class="btn btn-ghost lc-gbtn" :disabled="check.running" @click="fixGroup(g.items)">
-              {{ t('lcUpdateAll') }}
+              {{ t('lcUpdateAll') }} <ProBadge />
             </button>
             <button
               v-if="g.kind === 'broken'"
@@ -92,7 +96,7 @@ async function fixGroup(items) {
               :disabled="check.running"
               @click="deleteGroup(g.items)"
             >
-              {{ confirming === g.kind ? t('lcConfirmDelete', { n: g.items.length }) : t('lcDeleteAll') }}
+              {{ confirming === g.kind ? t('lcConfirmDelete', { n: g.items.length }) : t('lcDeleteAll') }} <ProBadge />
             </button>
           </header>
           <p class="st-hint lc-ghint">{{ t('lcHint_' + g.kind) }}</p>

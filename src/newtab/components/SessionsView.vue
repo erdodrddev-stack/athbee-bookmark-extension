@@ -1,4 +1,6 @@
 <script setup>
+import { LIMITS } from '../../shared/premium'
+import { requirePro } from '../pro'
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import Icon from '../../components/Icon.vue'
 import { t } from '../../shared/i18n'
@@ -38,6 +40,7 @@ onBeforeUnmount(() => {
 })
 
 async function save() {
+  if (sessions.value.length >= LIMITS.sessions && !requirePro('sessions')) return
   saving.value = true
   try {
     const s = await saveWindow({ name: name.value, close: close.value, ws: activeWs.value?.id })

@@ -9,11 +9,15 @@ import { settings, meta, ACCENTS, LOOKS } from '../../../shared/settings'
 import { root, flattenFolders } from '../../../shared/bookmarks'
 import { activeWs, createWorkspace, deleteWorkspace, switchWorkspace } from '../../../shared/workspaces'
 import { toast } from '../../ui'
+import ProBadge from '../../../components/ProBadge.vue'
+import { LIMITS, isPro } from '../../../shared/premium'
+import { requirePro } from '../../pro'
 
 const props = defineProps({ editId: String, create: Boolean })
 const emit = defineEmits(['close'])
 
 function newOne() {
+  if (meta.workspaces.length >= LIMITS.workspaces && !requirePro('workspaces', { type: 'workspaces', props: { editId: selected.value } })) return null
   const w = createWorkspace(t('wsDefaultName', { n: meta.workspaces.length + 1 }))
   selected.value = w.id
   return w
@@ -48,8 +52,16 @@ function toggleFolder(id) {
 }
 
 // '' stands for "use the global setting"
-const accent = computed({ get: () => ws.value?.accent || '', set: (v) => (ws.value.accent = v || null) })
-const look = computed({ get: () => ws.value?.look || '', set: (v) => (ws.value.look = v || null) })
+// a workspace's own accent / look is a Pro feature; without it the global ones apply
+const proBack = () => ({ type: 'workspaces', props: { editId: selected.value } })
+const accent = computed({
+  get: () => (isPro.value && ws.value?.accent) || '',
+  set: (v) => { if (requirePro('wsTheme', proBack())) ws.value.accent = v || null },
+})
+const look = computed({
+  get: () => (isPro.value && ws.value?.look) || '',
+  set: (v) => { if (requirePro('wsTheme', proBack())) ws.value.look = v || null },
+})
 const globalHex = computed(() => (ACCENTS.find((a) => a.id === settings.accent) ?? ACCENTS[0]).hex)
 const accentOptions = computed(() => [
   { value: '', color: globalHex.value, label: t('wsDefault') },
@@ -78,7 +90,7 @@ const pad = (d) => ({ paddingLeft: 8 + d * 18 + 'px' })
           :class="{ on: w.id === selected }"
           @click="selected = w.id"
         >
-          <span class="wsd-dot" :style="{ background: (ACCENTS.find((a) => a.id === w.accent) || {}).hex || globalHex }" />
+          <span class="wsd-dot" :style="{ background: (isPro && ACCENTS.find((a) => a.id === w.accent) || {}).hex || globalHex }" />
           <span class="wsd-item-name">{{ w.name }}</span>
           <Icon v-if="activeWs?.id === w.id" name="check" :size="14" />
         </button>
@@ -116,11 +128,11 @@ const pad = (d) => ({ paddingLeft: 8 + d * 18 + 'px' })
         </div>
 
         <div class="st-row">
-          <span class="st-label">{{ t('accentColor') }}</span>
+          <span class="st-label">{{ t('accentColor') }} <ProBadge /></span>
           <Swatches v-model="accent" :options="accentOptions" />
         </div>
         <div class="st-row">
-          <span class="st-label">{{ t('look') }}</span>
+          <span class="st-label">{{ t('look') }} <ProBadge /></span>
           <Segmented v-model="look" :options="lookOptions" />
         </div>
       </div>

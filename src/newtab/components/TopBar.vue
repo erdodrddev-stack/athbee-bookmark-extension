@@ -1,4 +1,5 @@
 <script setup>
+import { requirePro } from '../pro'
 import ThemeSwitch from '../../components/ThemeSwitch.vue'
 import { computed, ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import Icon from '../../components/Icon.vue'
@@ -58,6 +59,11 @@ function addMenu(e) {
     { label: t('addFolder'), icon: 'folder-plus', action: () => openDialog('folder', { parentId }) },
   ])
 }
+
+function toggleAdv() {
+  if (ui.advOpen) ui.advOpen = false
+  else if (requirePro('advSearch')) ui.advOpen = true
+}
 </script>
 
 <template>
@@ -106,7 +112,7 @@ function addMenu(e) {
         :class="{ on: filterCount() > 0, open: ui.advOpen }"
         :title="t('advancedSearch')"
         :aria-expanded="ui.advOpen"
-        @click.prevent="ui.advOpen = !ui.advOpen"
+        @click.prevent="toggleAdv"
       >
         <Icon name="filter" :size="15" />
         <span v-if="filterCount()" class="search-filter-n">{{ filterCount() }}</span>

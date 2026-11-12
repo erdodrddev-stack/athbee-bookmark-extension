@@ -1,5 +1,6 @@
 import { reactive, watch } from 'vue'
 import { isExt, plain } from './util'
+import { license, loadLicense, lookAllowed, FREE_LOOKS } from './premium'
 
 export const ACCENTS = [
   { id: 'yellow', hex: '#f6c324' },
@@ -21,7 +22,7 @@ export const DEFAULTS = {
   showHidden: false,
   theme: 'system', // 'system' | 'light' | 'dark'
   accent: 'yellow', // one of ACCENTS[].id
-  look: 'brutal', // one of LOOKS
+  look: 'modern', // one of LOOKS (brutal and cyber are Pro)
   style: 'card', // 'card' | 'compact' | 'icon'
   layout: 'grid', // 'grid' | 'columns'
   width: 240,
@@ -88,6 +89,7 @@ export function flushPersist() {
 }
 
 export async function loadPersisted() {
+  await loadLicense()
   if (isExt) {
     const data = await chrome.storage.local.get(['settings', 'meta'])
     Object.assign(settings, data.settings || {})
@@ -124,15 +126,16 @@ export function applyTheme() {
     root.classList.toggle('light', !dark)
     root.classList.toggle('no-anim', settings.disableAnimations)
     // the active workspace may override the accent color and the look
-    const ws = meta.workspaces.find((w) => w.id === meta.activeWs)
+    const ws = license.pro ? meta.workspaces.find((w) => w.id === meta.activeWs) : null
     const accentId = ws?.accent || settings.accent
     const look = ws?.look || settings.look
     const accent = ACCENTS.find((a) => a.id === accentId) ?? ACCENTS[0]
     root.style.setProperty('--accent', accent.hex)
-    root.dataset.look = LOOKS.includes(look) ? look : LOOKS[0]
+    // paid looks fall back to the free one without Pro (the choice is kept for later)
+    root.dataset.look = LOOKS.includes(look) && lookAllowed(look) ? look : FREE_LOOKS[0]
   }
   watch(
-    () => [settings.theme, settings.accent, settings.look, settings.disableAnimations, meta.activeWs, meta.workspaces.map((w) => [w.accent, w.look])],
+    () => [settings.theme, settings.accent, settings.look, settings.disableAnimations, meta.activeWs, meta.workspaces.map((w) => [w.accent, w.look]), license.pro],
     update,
     { immediate: true, deep: true },
   )

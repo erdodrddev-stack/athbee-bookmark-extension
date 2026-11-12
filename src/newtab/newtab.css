@@ -765,3 +765,21 @@ html.dark .tag-dot { background: var(--tag-bg, hsl(var(--h), 70%, 78%)); }
 }
 html.dark .tag-ico { background: var(--tag-bg, hsl(var(--h), 70%, 78%)); }
 
+
+/* ----- Bookdeck Pro ----- */
+.pro-badge {
+  display: inline-block; margin-left: 4px; padding: 1px 4px; vertical-align: middle;
+  font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.06em; line-height: 1.3;
+  border: var(--bw) solid currentColor; opacity: 0.75;
+}
+.pro-why { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; padding: 10px 12px; background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.pro-lead { margin: 0 0 10px; color: var(--text-2); line-height: 1.5; }
+.pro-list { margin: 0 0 12px; padding: 0; list-style: none; border-top: var(--bw) solid var(--rule); }
+.pro-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: var(--bw) solid var(--rule); font-size: 14px; }
+.pro-list li.on { font-weight: 700; }
+.pro-dev { margin-right: auto; }
+.pro-btn { white-space: nowrap; }
+.pro-why svg { flex: none; }
+.pro-lock { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 36px 16px; text-align: center; }
+.pro-plan { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 8px 12px; border: var(--bw) solid var(--rule); }
+.pro-plan:hover { background: var(--hover); }

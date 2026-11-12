@@ -192,6 +192,23 @@ with sync_playwright() as p:
         page.locator('.toast-action').click()
         page.wait_for_selector('.dup-group')
 
+    @step('free plan: paid panels are locked, then Pro unlocks them')
+    def _():
+        page.locator('.mt-tabs button', has_text='Parados').click()
+        page.wait_for_selector('.pro-lock')
+        expect(page.locator('.stale-top').count() == 0, 'stale panel shown on the free plan')
+        page.locator('.mt-tabs button', has_text='Links quebrados').click()
+        page.wait_for_selector('.pro-lock')
+        # the lock opens the upgrade dialog, and closing it returns to maintenance
+        page.locator('.pro-lock .btn').click()
+        page.wait_for_selector('.pro-list')
+        page.wait_for_timeout(300)
+        shot('04b-upgrade')
+        page.get_by_role('button', name='Agora não').click()
+        page.wait_for_selector('.mt-tabs')
+        page.evaluate("() => chrome.storage.local.set({ license: { pro: true, source: 'dev', since: Date.now() } })")
+        page.wait_for_selector('.pro-lock', state='detached')
+
     @step('maintenance: unused tab renders')
     def _():
         page.locator('.mt-tabs button', has_text='Parados').click()

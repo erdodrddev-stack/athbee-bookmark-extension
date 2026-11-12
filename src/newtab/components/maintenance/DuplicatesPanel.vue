@@ -7,6 +7,8 @@ import { meta } from '../../../shared/settings'
 import { tagsOf } from '../../../shared/tags'
 import { faviconUrl, hostOf } from '../../../shared/util'
 import { toast } from '../../ui'
+import { requirePro } from '../../pro'
+import ProBadge from '../../../components/ProBadge.vue'
 import { openUrl } from '../../actions'
 import { duplicateGroups, extraCopies, ignoreGroup, clearIgnored, resolve } from '../../duplicates'
 
@@ -36,6 +38,7 @@ async function run(groups) {
 }
 
 function resolveAll() {
+  if (!requirePro('bulkFix')) return
   if (!confirming.value) { confirming.value = true; return }
   run(duplicateGroups.value)
 }
@@ -100,7 +103,7 @@ const ignoredCount = computed(() => meta.dupIgnored.length)
 
     <div v-if="duplicateGroups.length" class="mt-actions">
       <button class="btn" :class="confirming ? 'btn-danger' : 'btn-primary'" :disabled="busy" @click="resolveAll">
-        {{ confirming ? t('dupConfirmAll', { n: extraCopies }) : t('dupResolveAll') }}
+        {{ confirming ? t('dupConfirmAll', { n: extraCopies }) : t('dupResolveAll') }} <ProBadge />
       </button>
     </div>
   </div>

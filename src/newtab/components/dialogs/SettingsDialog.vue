@@ -11,26 +11,36 @@ import { activeWs } from '../../../shared/workspaces'
 import { t } from '../../../shared/i18n'
 import { isExt } from '../../../shared/util'
 import { downloadBackup, parseBackup, summarize, importBackup } from '../../../shared/backup'
-import { toast } from '../../ui'
+import { toast, openDialog } from '../../ui'
+import { isPro, license, lookAllowed, FREE_LOOKS } from '../../../shared/premium'
+import { requirePro } from '../../pro'
 
+const props = defineProps({ tab: { type: String, default: 'general' } })
 const emit = defineEmits(['close'])
-const tab = ref('general')
+const tab = ref(props.tab)
 const version = isExt ? chrome.runtime.getManifest().version : 'dev'
 const isMac = navigator.platform.toLowerCase().includes('mac')
 const mod = isMac ? '⌘' : 'Ctrl'
-const lookOptions = computed(() => LOOKS.map((l) => ({ value: l, label: t('look_' + l) })))
+const lookOptions = computed(() => LOOKS.map((l) => ({ value: l, label: t('look_' + l), pro: !FREE_LOOKS.includes(l) })))
 const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a.hex, label: t('accent_' + a.id) })))
-// The active workspace's own accent / look win over the global ones, so these pickers
-// show and edit whatever is in effect: the workspace's value if it has one, else the global.
-const wsAccent = computed(() => !!activeWs.value?.accent && ACCENTS.some((a) => a.id === activeWs.value.accent))
-const wsLook = computed(() => !!activeWs.value?.look && LOOKS.includes(activeWs.value.look))
+// The active workspace's own accent / look (a Pro feature) win over the global ones, so these
+// pickers show and edit whatever is in effect: the workspace's value if it has one, else the global.
+const wsAccent = computed(() => isPro.value && !!activeWs.value?.accent && ACCENTS.some((a) => a.id === activeWs.value.accent))
+const wsLook = computed(() => isPro.value && !!activeWs.value?.look && LOOKS.includes(activeWs.value.look))
 const accent = computed({
   get: () => (wsAccent.value ? activeWs.value.accent : settings.accent),
   set: (v) => (wsAccent.value ? (activeWs.value.accent = v) : (settings.accent = v)),
 })
 const look = computed({
-  get: () => (wsLook.value ? activeWs.value.look : settings.look),
-  set: (v) => (wsLook.value ? (activeWs.value.look = v) : (settings.look = v)),
+  get: () => {
+    const l = wsLook.value ? activeWs.value.look : settings.look
+    return lookAllowed(l) ? l : FREE_LOOKS[0]
+  },
+  set: (v) => {
+    if (!lookAllowed(v) && !requirePro('looks', { type: 'settings', props: { tab: 'appearance' } })) return
+    if (wsLook.value) activeWs.value.look = v
+    else settings.look = v
+  },
 })
 
 // ----- backup -----
@@ -233,6 +243,11 @@ async function onImport() {
           <Logo :size="56" />
           <div class="st-about-name">Bookdeck</div>
           <div class="st-hint">{{ t('version', { v: version }) }}</div>
+          <button class="pro-plan" @click="openDialog('upgrade', { back: { type: 'settings', props: { tab: 'about' } } })">
+            <span class="st-label">{{ t('proPlan') }}: {{ isPro ? t('proPlanPro') : t('proPlanFree') }}</span>
+            <span v-if="license.source === 'dev'" class="st-hint">dev</span>
+            <span class="link-btn">{{ t('proSeeBenefits') }}</span>
+          </button>
           <p>{{ t('aboutText') }}</p>
           <div class="st-sc-title">{{ t('shortcuts') }}</div>
           <ul class="st-sc">
