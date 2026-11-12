@@ -41,7 +41,7 @@ Teste de ponta a ponta num navegador real (headless). Detalhes em `tests/e2e/REA
 npm run package      # gera bookdeck-<versão>.zip para a Chrome Web Store
 ```
 
-Textos da loja e justificativa das permissões: `docs/store/listing.md`. Política de privacidade: `docs/privacy-policy.md`.
+Passo a passo: `docs/store/PUBLISHING.md`. Textos da loja e permissões: `docs/store/listing.md`. Imagens: `npm run store:assets` (gera `docs/store/images/`). Política de privacidade: `docs/privacy-policy.html`.
 
 ## Estrutura
 
