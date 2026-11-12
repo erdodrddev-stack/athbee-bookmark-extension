@@ -68,15 +68,22 @@ const TIMED_OUT = new Error('timeout')
 
 const LOGIN = /\/(login|signin|sign-in|sign_in|auth|sso|account\/login|session)s?\b|[?&](continue|returnurl|redirect_uri|next)=/i
 
+/** First path segments that only pick a language/region: /pt-br, /en_US, /intl/pt-br, /intl-pt, /br */
+const LOCALE = /^(intl|[a-z]{2}([-_][a-z]{2,4})?|intl-[a-z]{2}([-_][a-z]{2,4})?)$/i
+const TRACKING = /^(utm_\w+|fbclid|gclid|dclid|msclkid|mc_cid|mc_eid|igshid|ref|ref_src|source|si)$/i
+
 /**
- * Same page despite small URL differences: http→https, www, trailing slash,
- * case of host, or the site only adding query parameters (?locale=…, ?ref=…).
+ * Same page despite differences that don't change it: http→https, www,
+ * trailing slash, a language/region prefix added by the site (/pt-br/…),
+ * extra query parameters (?locale=…) or dropped tracking parameters.
  */
 function samePage(a, b) {
   const parts = (u) => {
     try {
       const x = new URL(u)
-      return { host: x.hostname.replace(/^www\./, '').toLowerCase(), path: x.pathname.replace(/\/+$/, ''), params: x.searchParams }
+      const segs = x.pathname.split('/').filter(Boolean)
+      while (segs.length && LOCALE.test(segs[0])) segs.shift()
+      return { host: x.hostname.replace(/^www\./, '').toLowerCase(), path: segs.join('/').toLowerCase(), params: x.searchParams }
     } catch {
       return null
     }
@@ -85,8 +92,8 @@ function samePage(a, b) {
   const y = parts(b)
   if (!x || !y) return a === b
   if (x.host !== y.host || x.path !== y.path) return false
-  // every parameter we had is still there with the same value; extra ones don't matter
-  for (const [k, v] of x.params) if (y.params.get(k) !== v) return false
+  // every meaningful parameter we had is still there with the same value
+  for (const [k, v] of x.params) if (!TRACKING.test(k) && y.params.get(k) !== v) return false
   return true
 }
 
