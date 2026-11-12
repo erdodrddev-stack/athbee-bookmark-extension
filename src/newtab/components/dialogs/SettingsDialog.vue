@@ -1,11 +1,11 @@
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import Modal from '../../../components/Modal.vue'
 import Icon from '../../../components/Icon.vue'
 import Logo from '../../../components/Logo.vue'
 import Toggle from '../../../components/Toggle.vue'
 import Segmented from '../../../components/Segmented.vue'
-import Swatches from '../../../components/Swatches.vue'
+import PreviewPicker from '../../../components/PreviewPicker.vue'
 import { settings, ACCENTS, LOOKS } from '../../../shared/settings'
 import { activeWs } from '../../../shared/workspaces'
 import { t } from '../../../shared/i18n'
@@ -21,8 +21,21 @@ const tab = ref(props.tab)
 const version = isExt ? chrome.runtime.getManifest().version : 'dev'
 const isMac = navigator.platform.toLowerCase().includes('mac')
 const mod = isMac ? '⌘' : 'Ctrl'
-const lookOptions = computed(() => LOOKS.map((l) => ({ value: l, label: t('look_' + l), pro: !FREE_LOOKS.includes(l) })))
-const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a.hex, label: t('accent_' + a.id) })))
+// each option previews itself: looks drawn in the current color, colors in the current look
+const accentHex = computed(() => (ACCENTS.find((a) => a.id === accent.value) ?? ACCENTS[0]).hex)
+const lookOptions = computed(() =>
+  LOOKS.map((l) => ({ value: l, label: t('look_' + l), pro: !FREE_LOOKS.includes(l), look: l, accent: accentHex.value })),
+)
+const accentOptions = computed(() =>
+  ACCENTS.map((a) => ({ value: a.id, label: t('accent_' + a.id), look: look.value, accent: a.hex })),
+)
+// previews follow the theme in effect (the "system" one included)
+const mq = matchMedia('(prefers-color-scheme: dark)')
+const systemDark = ref(mq.matches)
+const onScheme = (e) => (systemDark.value = e.matches)
+mq.addEventListener('change', onScheme)
+onBeforeUnmount(() => mq.removeEventListener('change', onScheme))
+const dark = computed(() => settings.theme === 'dark' || (settings.theme === 'system' && systemDark.value))
 // The active workspace's own accent / look (a Pro feature) win over the global ones, so these
 // pickers show and edit whatever is in effect: the workspace's value if it has one, else the global.
 const wsAccent = computed(() => isPro.value && !!activeWs.value?.accent && ACCENTS.some((a) => a.id === activeWs.value.accent))
@@ -137,19 +150,19 @@ async function onImport() {
               ]"
             />
           </div>
-          <div class="st-row">
+          <div class="st-row st-stack">
             <span>
               <span class="st-label">{{ t('look') }}</span>
               <span v-if="wsLook" class="st-hint">{{ t('wsOwnSetting', { name: activeWs.name }) }}</span>
             </span>
-            <Segmented v-model="look" :options="lookOptions" />
+            <PreviewPicker v-model="look" :options="lookOptions" :dark="dark" :label="t('look')" />
           </div>
-          <div class="st-row">
+          <div class="st-row st-stack">
             <span>
               <span class="st-label">{{ t('accentColor') }}</span>
               <span v-if="wsAccent" class="st-hint">{{ t('wsOwnSetting', { name: activeWs.name }) }}</span>
             </span>
-            <Swatches v-model="accent" :options="accentOptions" />
+            <PreviewPicker v-model="accent" :options="accentOptions" :dark="dark" :label="t('accentColor')" />
           </div>
           <div class="st-row">
             <span class="st-label">{{ t('style') }}</span>

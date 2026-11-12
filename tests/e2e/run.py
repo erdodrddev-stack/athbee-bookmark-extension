@@ -313,11 +313,11 @@ with sync_playwright() as p:
     @step('workspaces: settings edit the active workspace color')
     def _():
         accent = lambda: page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()")
-        checked = lambda: page.locator('.st-panel .swatch[aria-checked="true"]').get_attribute('aria-label')
+        checked = lambda: page.locator('.st-panel [aria-label="Cor de destaque"] .pv-opt[aria-checked="true"]').inner_text().strip()
         def open_appearance():
             page.locator('.tree-row', has_text='Configurações').click()
             page.get_by_text('Aparência').first.click()
-            page.wait_for_selector('.st-panel .swatch')
+            page.wait_for_selector('.st-panel .pv-opt')
         global_hex = accent()
         # give "Trabalho" its own color, then activate it
         page.locator('.ws-switch').click()
@@ -332,7 +332,7 @@ with sync_playwright() as p:
         open_appearance()
         expect(checked() == 'Laranja', f'picker shows {checked()}, not the workspace color')
         expect(page.locator('.st-hint', has_text='Só do workspace “Trabalho”').count() == 1, 'workspace hint missing (color only)')
-        page.locator('.st-panel .swatch[aria-label="Rosa"]').click()
+        page.locator('.st-panel .pv-opt', has_text='Rosa').click()
         page.wait_for_timeout(200)
         expect(accent() == '#ff8fd1', f'color did not change: {accent()}')
         shot('11b-settings-workspace-color')
