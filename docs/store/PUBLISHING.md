@@ -5,7 +5,7 @@ or a decision.
 
 ## 1. Before uploading
 
-- [ ] `npm run test:e2e` passes (13 steps, no console errors)
+- [ ] `npm run test:e2e` passes (14 steps, no console errors)
 - [ ] **(you)** Load `dist/` unpacked once (`chrome://extensions` → Load unpacked) and click
       Maintenance → Broken links → Check now: the browser's site-access prompt appears,
       and after allowing it the check runs. This is the only flow the automated test

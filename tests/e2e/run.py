@@ -293,6 +293,43 @@ with sync_playwright() as p:
         page.wait_for_timeout(300)
         expect('Tudo' in page.locator('.ws-switch').inner_text(), 'Alt+0 did not switch back')
 
+    @step('workspaces: settings edit the active workspace color')
+    def _():
+        accent = lambda: page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()")
+        checked = lambda: page.locator('.st-panel .swatch[aria-checked="true"]').get_attribute('aria-label')
+        def open_appearance():
+            page.locator('.tree-row', has_text='Configurações').click()
+            page.get_by_text('Aparência').first.click()
+            page.wait_for_selector('.st-panel .swatch')
+        global_hex = accent()
+        # give "Trabalho" its own color, then activate it
+        page.locator('.ws-switch').click()
+        page.locator('.ctx-item', has_text='Gerenciar').click()
+        page.wait_for_selector('.wsd')
+        page.locator('.wsd-item', has_text='Trabalho').click()
+        page.locator('.wsd-edit .swatch[aria-label="Laranja"]').click()
+        page.get_by_role('button', name='Usar este workspace').click()
+        page.wait_for_timeout(300)
+        expect(accent() == '#ff7a45', f'workspace color not applied: {accent()}')
+        # the settings picker shows and changes the workspace's color
+        open_appearance()
+        expect(checked() == 'Laranja', f'picker shows {checked()}, not the workspace color')
+        expect(page.locator('.st-hint', has_text='Só do workspace “Trabalho”').count() == 1, 'workspace hint missing (color only)')
+        page.locator('.st-panel .swatch[aria-label="Rosa"]').click()
+        page.wait_for_timeout(200)
+        expect(accent() == '#ff8fd1', f'color did not change: {accent()}')
+        shot('11b-settings-workspace-color')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.st-panel', state='detached')
+        # the global color was left alone
+        page.keyboard.press('Alt+0')
+        page.wait_for_timeout(300)
+        expect(accent() == global_hex, f'global color changed: {accent()} != {global_hex}')
+        open_appearance()
+        expect(page.locator('.st-hint', has_text='Só do workspace').count() == 0, 'hint shown with no workspace')
+        page.keyboard.press('Escape')
+        page.wait_for_selector('.st-panel', state='detached')
+
     @step('dark theme + columns layout render')
     def _():
         page.locator('.seg-mini .icon-btn').nth(1).click()

@@ -7,6 +7,7 @@ import Toggle from '../../../components/Toggle.vue'
 import Segmented from '../../../components/Segmented.vue'
 import Swatches from '../../../components/Swatches.vue'
 import { settings, ACCENTS, LOOKS } from '../../../shared/settings'
+import { activeWs } from '../../../shared/workspaces'
 import { t } from '../../../shared/i18n'
 import { isExt } from '../../../shared/util'
 import { downloadBackup, parseBackup, summarize, importBackup } from '../../../shared/backup'
@@ -19,6 +20,18 @@ const isMac = navigator.platform.toLowerCase().includes('mac')
 const mod = isMac ? '⌘' : 'Ctrl'
 const lookOptions = computed(() => LOOKS.map((l) => ({ value: l, label: t('look_' + l) })))
 const accentOptions = computed(() => ACCENTS.map((a) => ({ value: a.id, color: a.hex, label: t('accent_' + a.id) })))
+// The active workspace's own accent / look win over the global ones, so these pickers
+// show and edit whatever is in effect: the workspace's value if it has one, else the global.
+const wsAccent = computed(() => !!activeWs.value?.accent && ACCENTS.some((a) => a.id === activeWs.value.accent))
+const wsLook = computed(() => !!activeWs.value?.look && LOOKS.includes(activeWs.value.look))
+const accent = computed({
+  get: () => (wsAccent.value ? activeWs.value.accent : settings.accent),
+  set: (v) => (wsAccent.value ? (activeWs.value.accent = v) : (settings.accent = v)),
+})
+const look = computed({
+  get: () => (wsLook.value ? activeWs.value.look : settings.look),
+  set: (v) => (wsLook.value ? (activeWs.value.look = v) : (settings.look = v)),
+})
 
 // ----- backup -----
 const fileInput = ref(null)
@@ -115,12 +128,18 @@ async function onImport() {
             />
           </div>
           <div class="st-row">
-            <span class="st-label">{{ t('look') }}</span>
-            <Segmented v-model="settings.look" :options="lookOptions" />
+            <span>
+              <span class="st-label">{{ t('look') }}</span>
+              <span v-if="wsLook" class="st-hint">{{ t('wsOwnSetting', { name: activeWs.name }) }}</span>
+            </span>
+            <Segmented v-model="look" :options="lookOptions" />
           </div>
           <div class="st-row">
-            <span class="st-label">{{ t('accentColor') }}</span>
-            <Swatches v-model="settings.accent" :options="accentOptions" />
+            <span>
+              <span class="st-label">{{ t('accentColor') }}</span>
+              <span v-if="wsAccent" class="st-hint">{{ t('wsOwnSetting', { name: activeWs.name }) }}</span>
+            </span>
+            <Swatches v-model="accent" :options="accentOptions" />
           </div>
           <div class="st-row">
             <span class="st-label">{{ t('style') }}</span>

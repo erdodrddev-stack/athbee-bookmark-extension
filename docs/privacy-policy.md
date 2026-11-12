@@ -1,6 +1,6 @@
 # Bookdeck – Privacy Policy
 
-_Last updated: November 11, 2026_
+_Last updated: November 12, 2026_
 
 **Short version: Bookdeck does not collect, send or sell any of your data. Everything stays in your browser.**
 
@@ -42,7 +42,7 @@ Questions: open an issue in the project repository.
 
 # Bookdeck – Política de Privacidade
 
-_Atualizada em 11 de novembro de 2026_
+_Atualizada em 12 de novembro de 2026_
 
 **Resumo: o Bookdeck não coleta, não envia e não vende nenhum dado seu. Tudo fica no seu navegador.**
 
