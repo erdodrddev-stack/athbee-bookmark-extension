@@ -26,7 +26,11 @@ ExtensionPay's privacy policy: https://extensionpay.com/privacy. Stripe's: https
 
 ## Where your data is stored
 
-Settings, tags, pinned and hidden items, workspaces, sessions, last-visit dates and your Pro license status are saved in the browser's local extension storage on your computer. Bookdeck has no server of its own. Your bookmarks and settings are not synced by Bookdeck to any cloud.
+Settings, tags, pinned and hidden items, workspaces, sessions, last-visit dates and your Pro license status are saved in the browser's local extension storage on your computer. Bookdeck has no server of its own.
+
+**Sync (Pro, off by default)**: if you turn on “Sync across computers”, your tags, pinned and hidden items, tag colors, workspaces, sessions and settings are stored in the browser's own sync storage, which travels with **your Google account** (or your browser's sync account) like the rest of your browser data. They identify bookmarks by their address. Bookdeck has no access to that account and no copy of this data.
+
+**Automatic backups (Pro, off by default)**: Bookdeck saves a backup file to the `Bookdeck` folder in your Downloads, daily or weekly, and deletes the oldest ones beyond the number you chose. The files never leave your computer.
 
 When you export a backup, a `.json` file is saved where you choose. It contains your bookmarks, tags, sessions, settings and last-visit dates; keep it somewhere safe.
 
@@ -78,7 +82,11 @@ Política de privacidade do ExtensionPay: https://extensionpay.com/privacy. Do S
 
 ## Onde seus dados ficam
 
-Configurações, tags, fixados, ocultos, workspaces, sessões, datas de visita e o status da sua licença Pro ficam no armazenamento local da extensão, no seu computador. O Bookdeck não tem servidor próprio e não sincroniza seus favoritos nem suas configurações com nenhuma nuvem.
+Configurações, tags, fixados, ocultos, workspaces, sessões, datas de visita e o status da sua licença Pro ficam no armazenamento local da extensão, no seu computador. O Bookdeck não tem servidor próprio.
+
+**Sincronização (Pro, desligada por padrão)**: se você ligar “Sincronizar entre computadores”, suas tags, fixados, ocultos, cores de tags, workspaces, sessões e configurações vão para o armazenamento de sincronização do próprio navegador, que acompanha **a sua conta Google** (ou a conta de sincronização do seu navegador), como o restante dos dados do navegador. Os favoritos são identificados pelo endereço. O Bookdeck não tem acesso a essa conta nem cópia desses dados.
+
+**Backup automático (Pro, desligado por padrão)**: o Bookdeck salva um arquivo de backup na pasta `Bookdeck` dos seus Downloads, todo dia ou toda semana, e apaga os mais antigos além da quantidade escolhida. Os arquivos nunca saem do seu computador.
 
 Ao exportar um backup, um arquivo `.json` é salvo onde você escolher. Ele contém favoritos, tags, sessões, configurações e datas de visita; guarde-o em lugar seguro.
 

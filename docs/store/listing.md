@@ -36,9 +36,11 @@ Bookdeck transforma a nova guia num painel dos seus favoritos. Tudo o que você 
 
 ★ BOOKDECK PRO: US$ 12, PAGAMENTO ÚNICO
 Tudo acima é grátis, sem prazo. O Pro libera, para sempre:
+• Sincronização de tags, workspaces, sessões e configurações entre computadores, pela sua conta Google
+• Backup automático diário ou semanal na pasta Downloads/Bookdeck
 • Workspaces e sessões ilimitados (o grátis tem 2 workspaces e 3 sessões)
 • Cor e visual próprios para cada workspace
-• Visuais brutal e cyberpunk
+• Visuais brutal e cyberpunk e cor de destaque personalizada
 • Busca avançada por tags: todas, qualquer, nenhuma ou somente estas
 • Verificação de links da biblioteca inteira e correção em lote de links e duplicados
 • Favoritos parados: o que você não abre há 3, 6 ou 12 meses
@@ -80,9 +82,11 @@ Bookdeck turns the new tab into a dashboard for your bookmarks. Everything you s
 
 ★ BOOKDECK PRO: US$ 12, ONE-TIME PAYMENT
 Everything above is free, with no time limit. Pro unlocks, for good:
+• Sync tags, workspaces, sessions and settings across computers through your Google account
+• Daily or weekly automatic backups to Downloads/Bookdeck
 • Unlimited workspaces and sessions (the free plan has 2 workspaces and 3 sessions)
 • A color and look of its own for each workspace
-• Brutal and cyberpunk looks
+• Brutal and cyberpunk looks and a custom accent color
 • Advanced tag search: all, any, none or only these
 • Link checks across your whole library, and bulk fixes for links and duplicates
 • Unused bookmarks: what you haven't opened in 3, 6 or 12 months
@@ -105,7 +109,9 @@ Modern look, light and dark themes, five accent colors. Works in Chrome, Brave a
 | Permission | Why it is needed |
 |---|---|
 | `bookmarks` | Show, create, edit, move and delete the user's bookmarks: the core of the extension. |
-| `storage` | Save settings, tags, pinned/hidden items, workspaces, sessions, last-visit dates and the Pro license status locally. |
+| `storage` | Save settings, tags, pinned/hidden items, workspaces, sessions, last-visit dates and the Pro license status locally; with Pro sync turned on, also in `storage.sync` (the user's own browser sync account). |
+| `downloads` | Pro automatic backups: save a backup file to Downloads/Bookdeck without a prompt, and delete the oldest ones beyond the number the user chose. |
+| `downloads.ui` | Hide the download bubble while an automatic backup is saved in the background. |
 | `history` | Suggest frequently used bookmarks and pages, search history from the search box, and tell which bookmarks haven't been opened in months. Read locally only. |
 | `tabs` | Open bookmarks in new tabs/windows, read the current tab in the popup to save it, and save/restore the tabs of a window as a session. |
 | `tabGroups` | Keep tab group names and colors when saving and reopening a session. |

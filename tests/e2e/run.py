@@ -258,11 +258,15 @@ with sync_playwright() as p:
           const sessions = [1, 2, 3].map((i) => ({ id: 'x' + i, name: 'S' + i, createdAt: now - i, updatedAt: now - i, tabs: [{ url: site + '/s' + i, title: 'S' + i }] }))
           await chrome.storage.local.set({ sessions })
         }""", SITE)
+        tab = ctx.new_page(); tab.goto(SITE + '/s4')  # something to save
+        page.bring_to_front()
         page.get_by_text('Sessões', exact=True).first.click()
         page.wait_for_selector('.sess-card')
+        page.wait_for_selector('.sess-save .btn-primary:not([disabled])')
         page.locator('.sess-save .btn-primary').click()
         upgrade_shown('3 sessões')
         expect(page.locator('.sess-card').count() == 3, 'a 4th session was saved')
+        tab.close()
         # clean up, then unlock Pro for the rest of the run
         page.evaluate("""async () => {
           const { meta } = await chrome.storage.local.get('meta')
@@ -439,8 +443,15 @@ with sync_playwright() as p:
         open_settings('Backup')
         page.locator('.st-panel .seg button', has_text='Diário').click()
         page.wait_for_selector('.st-hint:has-text("Último em")', timeout=30000)
-        files = page.evaluate("async () => (await chrome.downloads.search({ filenameRegex: 'bookdeck-auto-', state: 'complete' })).map((d) => d.filename)")
-        expect(len(files) >= 1 and 'Bookdeck' in files[0], f'no backup file: {files}')
+        # Playwright saves downloads under its own random names, so find it by the id Bookdeck kept
+        d = page.evaluate("""async () => {
+          const { autoBackupState: s } = await chrome.storage.local.get('autoBackupState')
+          const [d] = await chrome.downloads.search({ id: s.downloadId })
+          return d && { filename: d.filename, state: d.state }
+        }""")
+        expect(bool(d) and d['state'] == 'complete', f'backup download not complete: {d}')
+        data = json.load(open(d['filename']))
+        expect(data.get('app') == 'bookdeck' and data.get('roots'), 'backup file is not a Bookdeck backup')
         shot('14-auto-backup')
 
     @step('pro: sync pushes, then applies a copy from another computer')

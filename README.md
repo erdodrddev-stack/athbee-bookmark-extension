@@ -28,7 +28,7 @@ Se outra extensão também substituir a nova guia (ex.: Markoob), desative-a enq
 
 ### Grátis × Pro (US$ 12, pagamento único)
 
-O plano grátis tem até 2 workspaces, 3 sessões e o visual moderno. O **Pro** libera workspaces e sessões ilimitados, cor/visual por workspace, os visuais brutal e cyberpunk, busca avançada por tags, favoritos parados, verificação de links da biblioteca inteira e correção em lote. Limites e licença: `src/shared/premium.js`. Em instalações sem compactação, o diálogo do Pro tem o botão **Ativar Pro (teste)**.
+O plano grátis tem até 2 workspaces, 3 sessões e o visual moderno. O **Pro** libera sincronização entre computadores (pela conta Google, via `chrome.storage.sync`), backup automático em Downloads/Bookdeck, workspaces e sessões ilimitados, cor de destaque personalizada, cor/visual por workspace, os visuais brutal e cyberpunk, busca avançada por tags, favoritos parados, verificação de links da biblioteca inteira e correção em lote. Limites e licença: `src/shared/premium.js`. Em instalações sem compactação, o diálogo do Pro tem o botão **Ativar Pro (teste)**.
 
 ## Testes
 
